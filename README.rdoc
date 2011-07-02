@@ -24,6 +24,11 @@ Application to vote with your electronic ID in the Referedum of October 15th.
     
     rake spec
 
+== Work in Progress
+
+  Integration of Verificatum's Security
+  http://ow.ly/5vrBI
+  
 == Contribute:
 
      1. Find or create an issue
