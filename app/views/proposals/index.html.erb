@@ -1,0 +1,9 @@
+<ul>
+<% @proposals.each_with_index do |proposal, index| %>
+  <li>
+    <p><%= index + 1 %> <%= proposal.name %></p>
+    <p><%= raw proposal.description %></p>
+  </li>
+  <br/>
+<% end %>
+</ul>
