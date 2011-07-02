@@ -78,13 +78,11 @@ a:hover { color: #036; }
 /**
  * Primary styles
  *
- * Author: 
  */
-
-
-
-
-
+#container {
+	width: 980px;
+	margin: 0 auto
+}
 
 
 
