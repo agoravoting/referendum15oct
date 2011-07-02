@@ -1,1 +1,25 @@
 <h1>Referendum 15 de octubre</h1>
+
+
+
+<!-- Declarar applet de integracion con libreria Verificatum
+	 
+	 TODO: Ubicacion de applet y librerias .jar: carpeta "public" (estudiar reubicacion dentro del propio "public")
+-->
+<Applet id="applet" Code="org.agora.verificatum.AppletVerificatum.class" archive="/lib/verificatum.jar, /lib/jgmpmee.jar" width="0" height="0">
+
+</Applet>
+
+<!-- Script de prueba ejecutado automaticamente al cargar la pagina.
+     Se realiza invocacion al applet para cifrar el texto "Hola prueba prueba"
+ -->
+<script>
+	var applet = document.getElementById('applet'); //Objeto del applet embebido en la pagina
+	var retorno= applet.encrypt('Hola prueba prueba');
+	document.write("<p>" + retorno + "</p>");
+</script>
+
+
+</Body>
+</HTML> 
+
