@@ -1,7 +1,7 @@
 <div id="proposals_item">
 <ul>
 	<% @proposals.each_with_index do |proposal, index| %>
-	  <li>
+	  <li id="proposal_<%= index + 1 %>">
 		<div id="proposals_text">
 	    	<h2><%= index + 1 %> <%= proposal.name %></h2>
 	    	<div id="proposal_description">
@@ -13,9 +13,9 @@
 		</div>
 		<div id="proposals_buttons">
 			<ul>
-				<li>Sí</li>
-				<li>No</li>
-				<li>Abstención</li>						
+		  		<li><%= link_to "Sí", "#", :class => "vote" %></li>
+		  		<li><%= link_to "No", "#", :class => "vote" %></li>
+		  		<li><%= link_to "Abstention", "#", :class => "vote" %></li>					
 			</ul>
 		</div>
 	  </li>
@@ -23,3 +23,15 @@
 	<% end %>
 </ul>
 </div>
+
+<script>
+  $(document).ready(function() {
+
+    <% for i in (1..5) %>
+      $("#proposal_<%= i %> .vote").click(function () {
+        $("#proposal_<%= i %>").hide("slide", { direction: "left" }, 1000);
+      });
+    <% end %>
+
+  });
+</script>
