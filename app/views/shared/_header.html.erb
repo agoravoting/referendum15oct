@@ -1,10 +1,12 @@
 <header>
   <div id="breadcrump">
-	  <ul>
-	  	<li>Vota</li>
-	  	<li>Comprueba</li>
-	  	<li>Envía</li>
-	  </ul>
+	  <% unless controller_name == "welcome" %>
+	    <ul>
+	    	<li>Vota</li>
+	    	<li>Comprueba</li>
+	    	<li>Envía</li>
+	    </ul>
+	  <% end %>
   </div>
 
   <h1>Referendum 15 de octubre</h1>
