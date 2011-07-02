@@ -79,15 +79,34 @@ a:hover { color: #036; }
  * Primary styles
  *
  */
+
 #container {
-	width: 980px;
+	width: 960px;
 	margin: 0 auto
 }
 
+/* Breadcrump */
+header ul {
+  margin: 0;
+  padding: 0;
+  list-style:none;
+}
 
+header li {
+  float:left;
+  margin: 0;
+  padding: 10px 20px;
+  width: 280px;
+  height: 20px;
+  text-align: right;
+}
 
-
-
+/* Title */
+header h1 {
+  font-size: 182%;
+  padding-bottom: 5px;
+  border-bottom: 3px solid #444
+}
 
 
 
