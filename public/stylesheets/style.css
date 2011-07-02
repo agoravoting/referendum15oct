@@ -85,7 +85,7 @@ a:hover { color: #036; }
 	margin: 0 auto
 }
 
-/* Breadcrump */
+/* Header */
 header ul {
   margin: 0;
   padding: 0;
@@ -101,11 +101,46 @@ header li {
   text-align: right;
 }
 
-/* Title */
 header h1 {
   font-size: 182%;
   padding-bottom: 5px;
   border-bottom: 3px solid #444
+}
+
+/* Wellcome Page */
+
+#welcome_top {
+  height: 60px;	
+}
+#welcome_text {
+    float: left;
+	width: 440px;
+	height: 366px;
+	padding: 90px 90px 0 90px;
+	text-align: center;
+}
+
+#insert_dnie_icon {
+    float: right;
+	width: 320px;
+	height: 456px;	
+}
+
+#welcome_text h2 {
+  font-size: 550%;		
+}
+
+/* Footer */
+footer ul {
+  margin-top: 20px;
+  padding: 0;
+  list-style:none;
+}
+
+footer li {
+  float:left;
+  margin: 0;
+  padding-right: 20px;
 }
 
 
