@@ -136,13 +136,21 @@ header h1 {
 
 /* Footer */
 
-#proposals_item ul {
+#proposals_items {
+  overflow: hidden;
+  height: 380px;
+}
+
+#proposals_items ul {
+  display: block;
   margin: 20px 0 0 0;
   padding: 0;
+  width: 4800px;
   list-style:none;
 }
 
-#proposals_item li {
+#proposals_items li {
+  display: block;
   float: left;
   margin: 0;
   padding: 0;
@@ -155,21 +163,21 @@ header h1 {
 }
 
 #proposals_text h2 {
-  font-size: 182%;
-  font-weight: bold;	
+  font-size: 197%;
+  font-weight: bold;
+  height: 60px;	
 }
 
 #proposal_description {
 	padding: 20px;
-	width: 600px;
 	height: 220px;
-	overflow: hidden;
+	overflow: auto;
 }
 
 #proposals_icon {
 	width: 320px;
 	float: left;
-	height: 280px;
+	height: 320px;
 }
 
 #proposals_buttons {
