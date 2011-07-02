@@ -12,18 +12,28 @@
   <meta name="author" content="">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <%= csrf_meta_tag %>
+  
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
   <link rel="stylesheet" href="stylesheets/style.css?v=2">
   <script src="javascripts/libs/modernizr-1.7.min.js"></script>
-
+  <%= csrf_meta_tag %>
 </head>
 
 <body>
-
- <%= yield %>
+  
+  <div id="container">
+    
+    <%= render :partial => "header"%>
+    
+    <div id="main" role="main">
+  		 <%= yield %>
+    </div>
+    
+    <%= render :partial => "footer"%>
+  
+  </div> <!-- eo #container -->
 
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
