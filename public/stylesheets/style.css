@@ -82,7 +82,9 @@ a:hover { color: #036; }
 
 #container {
 	width: 960px;
-	margin: 0 auto
+	margin: 0 auto;
+	height: 1%;
+	overflow: hidden;
 }
 
 /* Header */
@@ -131,7 +133,66 @@ header h1 {
   font-size: 550%;		
 }
 
+
 /* Footer */
+
+#proposals_item ul {
+  margin: 20px 0 0 0;
+  padding: 0;
+  list-style:none;
+}
+
+#proposals_item li {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 960px;
+}
+
+#proposals_text {
+    float: right;
+	width: 640px;	
+}
+
+#proposals_text h2 {
+  font-size: 182%;
+  font-weight: bold;	
+}
+
+#proposal_description {
+	padding: 20px;
+	width: 600px;
+	height: 220px;
+	overflow: hidden;
+}
+
+#proposals_icon {
+	width: 320px;
+	float: left;
+	height: 280px;
+}
+
+#proposals_buttons {
+	width: 960px;	
+}
+
+#proposals_buttons {
+  margin: 0;
+  padding: 0;
+  list-style:none;
+}
+
+#proposals_buttons li {
+  float:left;
+  margin: 0;
+  padding: 10px 20px;
+  width: 280px;
+  height: 20px;
+  text-align: center;
+  background: #eee;
+}
+/* Footer */
+
 footer ul {
   margin-top: 20px;
   padding: 0;
