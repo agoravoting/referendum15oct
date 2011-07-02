@@ -1,8 +1,20 @@
 <ul>
 <% @proposals.each_with_index do |proposal, index| %>
   <li>
-    <p><%= index + 1 %> <%= proposal.name %></p>
-    <p><%= raw proposal.description %></p>
+	<div id="proposals_text">
+    	<h2><%= index + 1 %> <%= proposal.name %></h2>
+    	<p><%= raw proposal.description %></p>
+	</div>
+	<div id="proposals_icon">
+		<%=image_tag("proposal_icon_1.png", :alt => "Icono de una un sobre entrando en una urna.")%>
+	</div>
+	<div id="proposals_buttons">
+		<ul>
+			<li>Sí</li>
+			<li>No</li>
+			<li>Abstención</li>						
+		</ul>
+	</div>
   </li>
   <br/>
 <% end %>
