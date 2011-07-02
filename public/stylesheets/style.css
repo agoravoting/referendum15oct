@@ -101,6 +101,10 @@ header li {
   text-align: right;
 }
 
+#breadcrump {
+  height: 40px;		
+} 
+
 header h1 {
   font-size: 182%;
   padding-bottom: 5px;
@@ -109,9 +113,6 @@ header h1 {
 
 /* Wellcome Page */
 
-#welcome_top {
-  height: 60px;	
-}
 #welcome_text {
     float: left;
 	width: 440px;

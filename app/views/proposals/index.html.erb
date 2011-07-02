@@ -1,14 +1,20 @@
 <ul>
 <% @proposals.each_with_index do |proposal, index| %>
   <li id="proposal_<%= index + 1 %>">
-    <p><%= index + 1 %> <%= proposal.name %></p>
-    <p><%= raw proposal.description %></p>
-  
-    <div>
-      <%= link_to "Si", "#", :class => "vote" %>
-      <%= link_to "No", "#", :class => "vote" %>
-      <%= link_to "Abstention", "#", :class => "vote" %>
-    </div>
+	  <div id="proposals_text">
+      	<h2><%= index + 1 %> <%= proposal.name %></h2>
+      	<p><%= raw proposal.description %></p>
+	  </div>
+	  <div id="proposals_icon">
+	  	<%=image_tag("proposal_icon_1.png", :alt => "Icono de una un sobre entrando en una urna.")%>
+	  </div>
+	  <div id="proposals_buttons">
+	  	<ul>
+	  		<li><%= link_to "Sí", "#", :class => "vote" %></li>
+	  		<li><%= link_to "No", "#", :class => "vote" %></li>
+	  		<li><%= link_to "Abstention", "#", :class => "vote" %></li>						
+	  	</ul>
+	  </div>
   </li>
 <% end %>
 </ul>
@@ -16,10 +22,11 @@
 <script>
   $(document).ready(function() {
 
-<% for i in (1..5) %>
-  $("#proposal_<%= i %> .vote").click(function () {
+    <% for i in (1..5) %>
+      $("#proposal_<%= i %> .vote").click(function () {
         $("#proposal_<%= i %>").hide("slide", { direction: "left" }, 1000);
-  });
-<% end %>
+      });
+    <% end %>
+
   });
 </script>
