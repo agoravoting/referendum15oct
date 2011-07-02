@@ -1,0 +1,79 @@
+= Referendum 15 de octubre
+
+== Description:
+
+Application to vote with your electronic ID in the Referedum of October 15th.
+
+== Install and Use:
+
+    git clone git://github.com/agoraciudadana/referendum15oct.git
+
+    cd referendum15oct
+
+    bundle
+    
+    rake db:migrate
+    
+    rake db:seed
+    
+    rails server
+    
+    Start voting!
+
+== Running the test suite:
+    
+    rake spec
+
+== Contribute:
+
+     1. Find or create an issue
+     
+     2. Add a comment to the issue to let people know you're going to work on it
+     
+     3. Fork
+     
+     4. Hack your changes in a topic branch (don't forget to write some tests ;)
+     
+     5. Make pull request
+     
+     6. Wait for comments from maintainers or code merge
+
+     IRC channel #agorarumble
+
+== Credits:
+  
+  Luismi Cavallé
+  
+  Manuel Muñoz
+  
+  Raimond García
+  
+  Alberto Fernández
+  
+  Jaime Iniesta
+  
+  Juanjo Bazán
+  
+  Pat Maddox
+  
+  Miguel Barcos
+  
+  Paco Guzmán
+  
+  Jorge Álvarez
+  
+  Rafa García
+  
+  Adrián Pradilla
+  
+  Eduardo Martínez
+  
+  Enrique Macip
+  
+  Jorge Dias
+  
+  Carlos Geijo
+   
+== License:
+
+Copyright (c) 2011 AgoraCiudadana, released under the MIT license.
