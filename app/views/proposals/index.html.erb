@@ -33,11 +33,11 @@
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function() {
 
-    <% for i in (2..5) %>
+    <% for i in (1..5) %>
       $("#proposal_<%= i %>").hide();
     <% end %>
     
-    $("#confirmation").hide();
+   // $("#confirmation").hide();
     
     <% for i in (1..5) %>
       $("#proposal_<%= i %> .vote").click(function () {

@@ -1,5 +1,7 @@
 = Referendum 15 de octubre
-
+ 
+ * http://referendum15oct.heroku.com/
+ 
 == Description:
 
 Application to vote with your electronic ID in the Referedum of October 15th.
@@ -26,11 +28,6 @@ Application to vote with your electronic ID in the Referedum of October 15th.
 
     rake spec
 
-== TODO
-
-  Integration of Verificatum's Security
-  http://wiki.agoraciudadana.org/index.php?title=Integraci%C3%B3n_Verificatum_con_%C3%81gora#Lista_de_tareas_de_integraci.C3.B3n
-
 == Contribute:
 
      1. Find or create an issue
@@ -47,6 +44,14 @@ Application to vote with your electronic ID in the Referedum of October 15th.
 
      IRC channel #agorarumble
 
+== More info
+
+  Integration of Verificatum's Security
+
+  * http://wiki.agoraciudadana.org/index.php?title=Integraci%C3%B3n_Verificatum_con_%C3%81gora#Lista_de_tareas_de_integraci.C3.B3n
+
+  irc: irc.freenode.net #agoraciudadana
+  
 == Credits:
 
   Luismi Cavallé
