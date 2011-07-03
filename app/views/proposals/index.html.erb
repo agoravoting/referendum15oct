@@ -41,16 +41,16 @@
     
     <% for i in (1..5) %>
       $("#proposal_<%= i %> .vote").click(function () {
-        $("#proposal_<%= i %>").fadeOut("slow", function() {
-          $("#proposal_<%= i + 1%>").fadeIn("slow");
+        $("#proposal_<%= i %>").fadeOut("fast", function() {
+          $("#proposal_<%= i + 1%>").fadeIn("fast");
         });
       });
     <% end %>
 
     $("#proposal_5 .vote").click(function () {
-      $("#proposal_5").fadeOut("slow", function() {
+      $("#proposal_5").fadeOut("fast", function() {
         $("#proposals_items").hide();
-        $("#confirmation").fadeIn("slow");
+        $("#confirmation").fadeIn("fast");
       });
     });
   });
