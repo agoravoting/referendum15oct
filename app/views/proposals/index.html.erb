@@ -4,8 +4,8 @@
       <li id="proposal_<%= index + 1 %>">
 
         <div id="proposals_text">
-            <h2><%= index + 1 %> <%= proposal.name %></h2>
-            <div id="proposal_description">
+          <h2><%= index + 1 %> <%= proposal.name %></h2>
+          <div id="proposal_description">
             <p><%= raw proposal.description %></p>
           </div>
         </div>
@@ -16,14 +16,13 @@
 
         <div id="proposals_buttons">
           <ul>
-              <li><%= link_to "Sí", "#", :class => "vote" %></li>
-              <li><%= link_to "No", "#", :class => "vote" %></li>
-              <li><%= link_to "Abstention", "#", :class => "vote" %></li>
+            <li><%= link_to "Sí", "#", :class => "vote" %></li>
+            <li><%= link_to "No", "#", :class => "vote" %></li>
+            <li><%= link_to "Abstention", "#", :class => "vote" %></li>
           </ul>
         </div>
 
       </li>
-      <br/>
     <% end %>
   </ul>
 </div>
