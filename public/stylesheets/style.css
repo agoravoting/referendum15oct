@@ -120,15 +120,16 @@ header h1 {
 #welcome_text {
     float: left;
 	width: 440px;
-	height: 366px;
-	padding: 90px 90px 0 90px;
+	height: 270px;
+	padding: 70px 90px 70px 90px;
 	text-align: center;
 }
 
 #insert_dnie_icon {
     float: right;
-	width: 320px;
-	height: 456px;	
+    padding-top: 30px;
+	width: 330px;
+	height: 370px;	
 }
 
 #welcome_text h2 {
@@ -209,12 +210,20 @@ header h1 {
   font-weight: bold;
   color: #444;
   text-decoration: none;
+  background: url("../images/button_bg.png");
 }
 .borderradius #proposals_buttons li a {
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-khtml-border-radius: 8px;
 	-webkit-border-radius: 8px;
+}
+
+.boxshadow #proposals_buttons li a {
+	box-shadow: 1px 1px 2px #888;
+	-moz-box-shadow: 1px 1px 2px #888;
+    -webkit-box-shadow: 1px 1px 2px #888;
+	-webkit-box-shadow: 1px 1px 2px #888;
 }
 
 #proposals_buttons li a:hover {
@@ -278,6 +287,7 @@ header h1 {
   font-size: 138.5%;
   color: #444;
   text-decoration: none;
+  background: url("../images/small_button_bg.png");
 }
 
 .borderradius #confirmation .change a {
@@ -285,6 +295,13 @@ header h1 {
 	-moz-border-radius: 8px;
 	-khtml-border-radius: 8px;
 	-webkit-border-radius: 8px;
+}
+
+.boxshadow #confirmation .change a {
+	box-shadow: 1px 1px 2px #888;
+	-moz-box-shadow: 1px 1px 2px #888;
+    -webkit-box-shadow: 1px 1px 2px #888;
+	-webkit-box-shadow: 1px 1px 2px #888;
 }
 
 #confirmation .change a:hover {
@@ -311,12 +328,20 @@ header h1 {
   font-weight: bold;
   color: #444;
   text-decoration: none;
+  background: url("../images/button_bg.png");
 }
 .borderradius #send_button a {
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-khtml-border-radius: 8px;
 	-webkit-border-radius: 8px;
+}
+
+.boxshadow #send_button a {
+	box-shadow: 1px 1px 2px #888;
+	-moz-box-shadow: 1px 1px 2px #888;
+    -webkit-box-shadow: 1px 1px 2px #888;
+	-webkit-box-shadow: 1px 1px 2px #888;
 }
 
 #send_button a:hover {
@@ -329,20 +354,28 @@ header h1 {
 /* Footer */
 
 footer ul {
-  margin-top: 10px;
+  margin: 10px 10px 5px 10px !important;
   clear: both;
-  padding: 0;
+  padding: 10px 0 0 0;
   list-style:none;
+  font-size: 85%;
+  overflow: hidden;
+  border-top: 3px solid #eee
 }
 
 footer li {
   float:left;
-  margin: 0;
+  margin: 0 !important;
   padding-right: 20px;
 }
 
+footer li a:link, footer li a:visited {
+  color: #aaa;
+}
 
-
+footer li a:hover, footer li a:active {
+  color: #98cde3;
+}
 
 .ir { display: block; text-indent: -999em; overflow: hidden; background-repeat: no-repeat; text-align: left; direction: ltr; }
 .hidden { display: none; visibility: hidden; }
