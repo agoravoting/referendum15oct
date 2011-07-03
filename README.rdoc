@@ -50,6 +50,8 @@ Application to vote with your electronic ID in the Referedum of October 15th.
 
   * http://wiki.agoraciudadana.org/index.php?title=Integraci%C3%B3n_Verificatum_con_%C3%81gora#Lista_de_tareas_de_integraci.C3.B3n
 
+  irc: irc.freenode.net #agoraciudadana
+  
 == Credits:
 
   Luismi Cavallé
