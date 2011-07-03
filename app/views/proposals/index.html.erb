@@ -33,11 +33,11 @@
 <script type="text/javascript" charset="utf-8">
   $(document).ready(function() {
 
-    <% for i in (1..5) %>
+    <% for i in (2..5) %>
       $("#proposal_<%= i %>").hide();
     <% end %>
     
-   // $("#confirmation").hide();
+    $("#confirmation").hide();
     
     <% for i in (1..5) %>
       $("#proposal_<%= i %> .vote").click(function () {
@@ -68,19 +68,23 @@
 <div id="confirmation">
   <applet id="crypter" code="org.agora.verificatum.AppletVerificatum.class" archive="/lib/verificatum.jar, /lib/jgmpmee.jar" width="0" height="0"></applet>
     <form>    
-      <ol>
+      <ul>
         <% @proposals.each_with_index do |proposal, index| %>
           <li id="confirmation_proposal_<%= index + 1 %>">
-            
-            <span class='title'><%= proposal.name %></span>
+
+            <h2><span class="number"><%= index + 1 %></span>
+
+            <span class="title"><%= proposal.name %></span></h2>
           
             <span class="choice"></span>
-   
+
+ 			<span class="change"><%= link_to "<< cambiar", "" %></span>
+  
            </li>
         <% end %>
-      </ol>
+      </ul>
       
-     <%= link_to "Aceptar", retrieve_dni_path %>
+     <div id="send_button"><%= link_to "Envía tu voto", retrieve_dni_path %></div>
       
       <pre id='params'>
       </pre>

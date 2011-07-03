@@ -136,7 +136,7 @@ header h1 {
 }
 
 
-/* Footer */
+/* Proposals */
 
 #proposals_items {
   overflow: hidden;
@@ -222,10 +222,114 @@ header h1 {
 	color: #fff;
 }
 
+#confirmation ul {
+  margin: 5px 0;
+  padding: 0;
+  list-style:none;
+}
+
+#confirmation ul li {
+  margin: 10px 0;
+  overflow: hidden;
+  font-weight: bold;
+}
+
+#confirmation .number, #confirmation .title, #confirmation .choice, #confirmation .change a {
+  display:block;
+  float: left;
+  background: #eee;
+}
+
+#confirmation .title, #confirmation .choice, #confirmation .change a {
+  margin-left: 20px;
+}
+
+#confirmation .number, #confirmation .choice, #confirmation .change a {
+  text-align: center;
+}
+
+#confirmation .number {
+  width: 60px;
+  padding: 6px 0;
+  height: 48px;
+  font-size: 320%;
+}
+
+#confirmation .title {
+  width: 450px;
+  padding: 8px 10px;
+  height: 44px;
+  font-size: 138.5%;
+}
+
+#confirmation .choice {
+  width: 220px;
+  padding: 20px 0;
+  height: 20px;
+  font-size: 138.5%;
+  background: #444;
+  color: #fff;
+}
+
+#confirmation .change a {
+  width: 140px;
+  padding: 20px 0;
+  height: 20px;
+  font-size: 138.5%;
+  color: #444;
+  text-decoration: none;
+}
+
+.borderradius #confirmation .change a {
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+#confirmation .change a:hover {
+	background: #444;
+	color: #fff;
+}
+
+#send_button {
+  float: right;
+  margin: 0;
+  padding: 0;
+}
+
+#send_button a {
+  margin: 10px 10px 10px 0;
+  float:left;
+  display:block;	
+  padding: 15px 20px 5px 20px;
+  width: 340px;
+  height: 60px;
+  text-align: center;
+  background: #eee;
+  font-size: 340%;
+  font-weight: bold;
+  color: #444;
+  text-decoration: none;
+}
+.borderradius #send_button a {
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+#send_button a:hover {
+	background: #444;
+	color: #fff;
+}
+
+
 
 /* Footer */
 
 footer ul {
+  clear: both;
   padding: 0;
   list-style:none;
 }
