@@ -65,22 +65,57 @@
   <% end %>
 </script>
 
+
+<script type="text/javascript" charset="utf-8">
+  
+  function sendVote()
+  {
+
+  var votos = [];
+  
+  for (var i = 1; i <= 5; i ++)
+  {
+    var propElem = document.getElementById("cp_prop_" + i);     
+    var prop = propElem.innerHTML;    
+    var votoElem = document.getElementById("cp_voto_" + i);    
+    var valorVoto = votoElem.innerHTML;
+    
+    votos.push({vote:prop, propossal:valorVoto});
+    
+  }
+  
+  var sVotos = JSON.stringify(votos);
+  
+ // var hash = crypter.vote(sVotos); 
+  
+  document.write("<p>" + sVotos + "</p>");
+  
+  }
+  
+</script>
+
+
 <div id="confirmation">
-  <applet id="crypter" code="org.agora.verificatum.AppletVerificatum.class" archive="/lib/verificatum.jar, /lib/jgmpmee.jar" width="0" height="0"></applet>
+  
+  <applet id="crypter" code="org.agora.VotingApplet.class" archive="/lib/agora-applet.jar, /lib/verificatum.jar, /lib/google-gson-stream-1.7.1.jar" width="0" height="0"></applet>
+  
+  
     <form>    
       <ol>
         <% @proposals.each_with_index do |proposal, index| %>
           <li id="confirmation_proposal_<%= index + 1 %>">
             
-            <span class='title'><%= proposal.name %></span>
+            <span id="cp_prop_<%= index + 1 %>" class='title'><%= proposal.name %></span>
           
-            <span class="choice"></span>
+            <span id="cp_voto_<%= index + 1 %>" class="choice"></span>
    
            </li>
         <% end %>
       </ol>
       
-     <%= link_to "Aceptar", retrieve_dni_path %>
+      <%= link_to "Aceptar", retrieve_dni_path %>
+    
+      <A HREF="javascript:sendVote()"> VOTA (INVOCA VotingApplet) </A>
       
       <pre id='params'>
       </pre>
