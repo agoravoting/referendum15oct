@@ -49,6 +49,7 @@
 
     $("#proposal_5 .vote").click(function () {
       $("#proposal_5").fadeOut("slow", function() {
+        $("#proposals_items").hide();
         $("#confirmation").fadeIn("slow");
       });
     });
@@ -117,9 +118,7 @@
         <% end %>
       </ul>
 
-     <div id="send_button"><%= link_to "Envía tu voto", retrieve_dni_path %></div>
-    
-      <A HREF="javascript:sendVote()"> VOTA (INVOCA VotingApplet) </A>
+     <div id="send_button"><%= link_to "Envía tu voto", "javascript:sendVote()" %></div>
       
       <pre id='params'>
       </pre>
