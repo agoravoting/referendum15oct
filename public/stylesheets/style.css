@@ -97,11 +97,12 @@ header ul {
 header li {
   float:left;
   margin: 0;
-  padding: 10px 20px;
-  width: 278px; /*280px without border*/
-  height: 20px;
+  padding: 12px 30px;
+  width: 260px; /*280px without border*/
+  height: 18px;
   text-align: right;
-  border: 1px solid #444;
+  background: url("../images/breadcrump_bg.png");
+  background-position: right;
 }
 
 #breadcrump {
@@ -161,29 +162,28 @@ header h1 {
 	width: 640px;	
 }
 
+
 #proposals_text h2 {
   font-size: 197%;
   font-weight: bold;
-  height: 60px;	
+  height: 60px;
+  padding: 0 20px 0 20px;
 }
 
 #proposal_description {
 	padding: 20px;
-	height: 220px;
+	height: 160px;
 	overflow: auto;
 }
 
 #proposals_icon {
 	width: 320px;
 	float: left;
-	height: 320px;
+	height: 260px;
 }
 
 #proposals_buttons {
-	width: 960px;	
-}
-
-#proposals_buttons {
+  width: 960px;
   margin: 0;
   padding: 0;
   list-style:none;
@@ -197,20 +197,29 @@ header h1 {
 }
 
 #proposals_buttons li a {
-  margin: 10px;
+  margin: 30px 10px 10px 10px;
   float:left;
   display:block;	
-  padding: 10px 20px;
+  padding: 15px 20px 5px 20px;
   width: 260px;
-  height: 20px;
+  height: 60px;
   text-align: center;
   background: #eee;
+  font-size: 340%;
+  font-weight: bold;
+  color: #444;
+  text-decoration: none;
 }
 .borderradius #proposals_buttons li a {
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-khtml-border-radius: 8px;
 	-webkit-border-radius: 8px;
+}
+
+#proposals_buttons li a:hover {
+	background: #444;
+	color: #fff;
 }
 
 
