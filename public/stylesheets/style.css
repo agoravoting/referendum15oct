@@ -97,10 +97,12 @@ header ul {
 header li {
   float:left;
   margin: 0;
-  padding: 10px 20px;
-  width: 280px;
-  height: 20px;
+  padding: 12px 30px;
+  width: 260px; /*280px without border*/
+  height: 18px;
   text-align: right;
+  background: url("../images/breadcrump_bg.png");
+  background-position: right;
 }
 
 #breadcrump {
@@ -109,7 +111,7 @@ header li {
 
 header h1 {
   font-size: 182%;
-  padding-bottom: 5px;
+  padding: 10px 0 5px 0;
   border-bottom: 3px solid #444
 }
 
@@ -138,7 +140,7 @@ header h1 {
 
 #proposals_items {
   overflow: hidden;
-  height: 380px;
+  height: 400px;
 }
 
 #proposals_items ul {
@@ -160,47 +162,70 @@ header h1 {
 	width: 640px;	
 }
 
+
 #proposals_text h2 {
   font-size: 197%;
   font-weight: bold;
-  height: 60px;	
+  height: 60px;
+  padding: 0 20px 0 20px;
 }
 
 #proposal_description {
 	padding: 20px;
-	height: 220px;
+	height: 160px;
 	overflow: auto;
 }
 
 #proposals_icon {
 	width: 320px;
 	float: left;
-	height: 320px;
+	height: 260px;
 }
 
 #proposals_buttons {
-	width: 960px;	
-}
-
-#proposals_buttons {
+  width: 960px;
   margin: 0;
   padding: 0;
   list-style:none;
 }
 
 #proposals_buttons li {
+  width: 320px;
   float:left;
   margin: 0;
-  padding: 10px 20px;
-  width: 280px;
-  height: 20px;
+  padding: 0;
+}
+
+#proposals_buttons li a {
+  margin: 30px 10px 10px 10px;
+  float:left;
+  display:block;	
+  padding: 15px 20px 5px 20px;
+  width: 260px;
+  height: 60px;
   text-align: center;
   background: #eee;
+  font-size: 340%;
+  font-weight: bold;
+  color: #444;
+  text-decoration: none;
 }
+.borderradius #proposals_buttons li a {
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+#proposals_buttons li a:hover {
+	background: #444;
+	color: #fff;
+}
+
+
 /* Footer */
 
 footer ul {
-  margin-top: 20px;
   padding: 0;
   list-style:none;
 }
