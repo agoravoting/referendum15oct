@@ -97,28 +97,25 @@
 
 
 <div id="confirmation">
-  
   <applet id="crypter" code="org.agora.VotingApplet.class" archive="/lib/agora-applet.jar, /lib/verificatum.jar, /lib/google-gson-stream-1.7.1.jar" width="0" height="0"></applet>
-  
   
     <form>    
       <ul>
         <% @proposals.each_with_index do |proposal, index| %>
           <li id="confirmation_proposal_<%= index + 1 %>">
-
-            <h2><span class="number"><%= index + 1 %></span>
-
-            <span id="cp_prop_<%= index + 1 %>" class="title"><%= proposal.name %></span></h2>
-          
+            <h2>
+              <span class="number"><%= index + 1 %></span>
+              <span id="cp_prop_<%= index + 1 %>" class="title"><%= proposal.name %></span>
+            </h2>
             <span id="cp_voto_<%= index + 1 %>" class="choice"></span>
-
- 			<span class="change"><%= link_to "<< cambiar", "" %></span>
-  
-           </li>
+ 			      <span class="change"><%= link_to "<< cambiar", "" %></span>
+          </li>
         <% end %>
       </ul>
-
-     <div id="send_button"><%= link_to "Envía tu voto", "javascript:sendVote()" %></div>
+      
+     <div id="send_button">
+      <%= link_to "Envía tu voto", "javascript:sendVote()" %>
+    </div>
       
       <pre id='params'>
       </pre>
