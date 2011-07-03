@@ -30,7 +30,7 @@
 </div>
 
 
-<script>
+<script type="text/javascript" charset="utf-8">
   $(document).ready(function() {
 
     <% for i in (1..5) %>
@@ -55,7 +55,7 @@
   });
 </script>
 
-<script>
+<script type="text/javascript" charset="utf-8">
   <% for i in (1..5) %>
     $("#proposal_<%= i %> .vote").click(function () {
       var proposal = $(this).attr("name");
@@ -80,7 +80,7 @@
         <% end %>
       </ol>
       
-      <input type='submit' value='Vota!!!'/>
+     <%= link_to "Aceptar", retrieve_dni_path %>
       
       <pre id='params'>
       </pre>

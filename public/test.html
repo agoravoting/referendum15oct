@@ -8,28 +8,32 @@
     
     <script type="text/javascript" charset="utf-8">
       $(function(){
-        
-        var crypter = $('#crypter').get(0),
-            signer = {
-              sign: function(vote) { return 'fake_signature' }
-            };
-        
+
+        var applet = $('#applet').get(0);
+
         $('form').submit(function(e) {
-          e.preventDefault();
-          $('#params').html(
-            JSON.stringify(
-              $('input:checked').map(function(){
-                clearVote = $(this).val();
-                proposal  = $(this).attr('name');
-                vote      = crypter.encrypt(clearVote) + "";
-                signature = signer.sign(vote);
-              
-                return { proposal: proposal, vote: vote, signature: signature }
-              }).toArray()
-            )
-          );
+            e.preventDefault()
+            var ballot = [
+                {
+                    'vote': $(this).val(), // id number of the option selected by the user
+                    'propossal': $(this).attr('name') // propossal id number
+                },
+                {
+                    'vote': $(this).val(),
+                    'propossal': $(this).attr('name')
+                },
+                {
+                    'vote': $(this).val(),
+                    'propossal': $(this).attr('name')
+                }
+            ];
+            var hash = applet.vote(ballot);
+            if (hash != "FAIL") {
+                // success!
+            } else {
+                // Fail
+            }
         });
-        
       });
     </script>
     
@@ -68,7 +72,7 @@
   </head>
   <body>
     <h1>Referéndum 15 Oct</h1>
-    <applet id="crypter" code="org.agora.verificatum.AppletVerificatum.class" archive="/lib/verificatum.jar, /lib/jgmpmee.jar" width="0" height="0"></applet>
+    <applet id="applet" code="org.agora.VotingApplet.class" archive="/lib/agora-applet.jar /lib/verificatum.jar /lib/google-gson-stream-1.7.1.jar" width="0" height="0"></applet>
     <form>    
       <ol>
         <li>
