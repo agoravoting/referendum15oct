@@ -27,7 +27,7 @@
 <script>
   $(document).ready(function() {
 
-    <% for i in (1..5) %>
+    <% for i in (1..@proposals.size) %>
       $("#proposal_<%= i %> .vote").click(function () {
         $("#proposal_<%= i %>").hide("slide", { direction: "left" }, 1000);
       });
