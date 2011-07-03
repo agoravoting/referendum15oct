@@ -250,22 +250,22 @@ header h1 {
 
 #confirmation .number {
   width: 60px;
-  padding: 6px 0;
-  height: 48px;
+  padding: 1px 0;
+  height: 45px;
   font-size: 320%;
 }
 
 #confirmation .title {
   width: 450px;
-  padding: 8px 10px;
-  height: 44px;
+  padding: 4px 10px;
+  height: 39px;
   font-size: 138.5%;
 }
 
 #confirmation .choice {
   width: 220px;
-  padding: 20px 0;
-  height: 20px;
+  padding: 12px 0;
+  height: 23px;
   font-size: 138.5%;
   background: #444;
   color: #fff;
@@ -273,8 +273,8 @@ header h1 {
 
 #confirmation .change a {
   width: 140px;
-  padding: 20px 0;
-  height: 20px;
+  padding: 12px 0;
+  height: 23px;
   font-size: 138.5%;
   color: #444;
   text-decoration: none;
@@ -299,7 +299,7 @@ header h1 {
 }
 
 #send_button a {
-  margin: 10px 10px 10px 0;
+  margin: 9px 10px 10px 0;
   float:left;
   display:block;	
   padding: 15px 20px 5px 20px;
