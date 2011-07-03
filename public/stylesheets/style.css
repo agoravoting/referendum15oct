@@ -329,6 +329,7 @@ header h1 {
 /* Footer */
 
 footer ul {
+  margin-top: 10px;
   clear: both;
   padding: 0;
   list-style:none;
