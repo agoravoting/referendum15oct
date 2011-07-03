@@ -16,9 +16,9 @@
         
   		  <div id="proposals_buttons">
   		  	<ul>
-  		    		<li><%= link_to "Sí", "#", :class => "vote" %></li>
-  		    		<li><%= link_to "No", "#", :class => "vote" %></li>
-  		    		<li><%= link_to "Abstention", "#", :class => "vote" %></li>					
+  		    		<li><%= link_to "Sí", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "Sí" %></li>
+  		    		<li><%= link_to "No", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "No" %></li>
+  		    		<li><%= link_to "Abstención", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "Abstención" %></li>					
   		  	</ul>
   		  </div>
 
@@ -28,6 +28,7 @@
   	<% end %>
   </ul>
 </div>
+
 
 <script>
   $(document).ready(function() {
@@ -46,3 +47,35 @@
 
   });
 </script>
+
+<script>
+  <% for i in (1..5) %>
+    $("#proposal_<%= i %> .vote").click(function () {
+      var proposal = $(this).attr("name");
+      var choice = $(this).attr("value");
+      $("#confirmation_" + proposal + " .choice").html(choice);
+    });
+  <% end %>
+</script>
+
+<applet id="crypter" code="org.agora.verificatum.AppletVerificatum.class" archive="/lib/verificatum.jar, /lib/jgmpmee.jar" width="0" height="0"></applet>
+  <form>    
+    <ol>
+      <% @proposals.each_with_index do |proposal, index| %>
+        <li id="confirmation_proposal_<%= index + 1 %>">
+          
+          <span class='title'><%= proposal.name %></span>
+        
+          <span class="choice"></span>
+ 
+         </li>
+      <% end %>
+    </ol>
+    
+    <input type='submit' value='Vota!!!'/>
+    
+    <pre id='params'>
+    </pre>
+    
+  </form>
+</applet>
