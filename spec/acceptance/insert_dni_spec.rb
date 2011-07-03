@@ -2,7 +2,7 @@ require File.expand_path(File.dirname(__FILE__) + '/acceptance_helper')
 
 feature "Insert Dni", %q{
   In order to vote in the Referedum
-  As a user
+  As a citizen
   I want to identify myself with a DNIe
 } do
 
