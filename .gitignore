@@ -1,6 +1,6 @@
 .bundle
-.rvmrc
 config/*.yml
 db/*.sqlite3
 log/*.log
 tmp/
+vendor/gems/
