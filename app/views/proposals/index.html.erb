@@ -1,15 +1,15 @@
+<div id="instructions"><h2>Propuesta 1 de 5</h2></div>
 <div id="proposals_items">
   <ul>
   	<% @proposals.each_with_index do |proposal, index| %>
   	  <li id="proposal_<%= index + 1 %>">
   		  
-  		  <div id="proposals_text">
-  	      	<h2><%= index + 1 %> <%= proposal.name %></h2>
-  	      	<div id="proposal_description">
-  		  		<p><%= raw proposal.description %></p>
-  		  	</div>
+  		  <div id="proposals_title">
+  	      	<h3><%= index + 1 %>. <%= proposal.name %></h3>
   		  </div>
-  		  
+	      <div id="proposal_description">
+		  		<%= raw proposal.description %>
+		  </div>
   		  <div id="proposals_icon">
   		  	<%=image_tag("proposal_icon_1.png", :alt => "Icono de una un sobre entrando en una urna.")%>
   		  </div>
@@ -103,10 +103,10 @@
       <ul>
         <% @proposals.each_with_index do |proposal, index| %>
           <li id="confirmation_proposal_<%= index + 1 %>">
-            <h2>
+            <h3>
               <span class="number"><%= index + 1 %></span>
               <span id="cp_prop_<%= index + 1 %>" class="title"><%= proposal.name %></span>
-            </h2>
+            </h3>
             <span id="cp_voto_<%= index + 1 %>" class="choice"></span>
  			      <span class="change"><%= link_to "<< cambiar", "" %></span>
           </li>
@@ -116,10 +116,6 @@
      <div id="send_button">
       <%= link_to "Envía tu voto", retrieve_dni_path %>
     </div>
-      
-      <pre id='params'>
-      </pre>
-      
     </form>
   </applet>
 </div>

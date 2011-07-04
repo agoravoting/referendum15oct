@@ -110,9 +110,17 @@ header li {
 } 
 
 header h1 {
-  font-size: 182%;
-  padding: 10px 0 5px 0;
-  border-bottom: 3px solid #444
+  font-size: 138.5%;
+  padding: 10px 0 0 0;
+  text-transform: uppercase;
+  float: right;
+}
+
+#instructions h2 {
+  font-size: 198%;
+  padding: 0 0 5px 0;
+  border-bottom: 3px solid #444;
+  clear: right;
 }
 
 /* Wellcome Page */
@@ -158,29 +166,48 @@ header h1 {
   width: 960px;
 }
 
-#proposals_text {
-    float: right;
-	width: 640px;	
+#proposals_title {
+	width: 960px;	
 }
 
 
-#proposals_text h2 {
+#proposals_title h3 {
   font-size: 197%;
-  font-weight: bold;
-  height: 60px;
-  padding: 0 20px 0 20px;
+  font-weight: normal;
+  height: 30px;
+  margin: 0 10px 10px 10px;
+  padding: 10px;
+  background: #f6f6f6;
 }
 
+.borderradius #proposals_title h3 {
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
 #proposal_description {
-	padding: 20px;
-	height: 160px;
+	width: 590px;
+	margin-right: 10px;
+	float: right;
+	padding: 0 20px 20px 20px;
+	height: 185px;
 	overflow: auto;
+}
+
+#proposal_description h3 {
+  font-size: 131%;
+  font-weight: bold;
+  padding: 20px 0 10px 0;
+  margin: 0 !important;
+  height: auto;
+  background: none;
 }
 
 #proposals_icon {
 	width: 320px;
 	float: left;
-	height: 260px;
+	height: 205px;
 }
 
 #proposals_buttons {
@@ -208,10 +235,11 @@ header h1 {
   background: #eee;
   font-size: 340%;
   font-weight: bold;
-  color: #444;
+  color: #000;
   text-decoration: none;
   background: url("../images/button_bg.png");
 }
+
 .borderradius #proposals_buttons li a {
 	border-radius: 8px;
 	-moz-border-radius: 8px;
@@ -238,7 +266,7 @@ header h1 {
 }
 
 #confirmation ul li {
-  margin: 10px 0;
+  margin: 10px 0 5px 0;
   overflow: hidden;
   font-weight: bold;
 }
@@ -249,7 +277,7 @@ header h1 {
   background: #eee;
 }
 
-#confirmation .title, #confirmation .choice, #confirmation .change a {
+#confirmation .choice, #confirmation .change a {
   margin-left: 20px;
 }
 
@@ -258,26 +286,36 @@ header h1 {
 }
 
 #confirmation .number {
-  width: 60px;
+  width: 50px;
+  margin-left: 10px;
   padding: 1px 0;
   height: 45px;
   font-size: 320%;
 }
 
 #confirmation .title {
-  width: 450px;
-  padding: 4px 10px;
-  height: 39px;
+  width: 540px;
+  margin-left: 10px;
+  padding: 15px 10px;
+  height: 17px;
   font-size: 138.5%;
+  font-weight: normal;
 }
 
 #confirmation .choice {
-  width: 220px;
-  padding: 12px 0;
-  height: 23px;
+  width: 140px;
+  padding: 15px 0;
+  height: 17px;
   font-size: 138.5%;
-  background: #444;
+  background: #888;
   color: #fff;
+}
+
+.borderradius #confirmation .choice {
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	-webkit-border-radius: 8px;
 }
 
 #confirmation .change a {
@@ -285,7 +323,7 @@ header h1 {
   padding: 12px 0;
   height: 23px;
   font-size: 138.5%;
-  color: #444;
+  color: #000;
   text-decoration: none;
   background: url("../images/small_button_bg.png");
 }
@@ -310,23 +348,22 @@ header h1 {
 }
 
 #send_button {
-  float: right;
   margin: 0;
   padding: 0;
 }
 
 #send_button a {
-  margin: 9px 10px 10px 0;
+  margin: 20px 10px 15px 10px;
   float:left;
   display:block;	
-  padding: 15px 20px 5px 20px;
-  width: 340px;
+  padding: 9px 20px 0 20px;
+  width: 900px;
   height: 60px;
   text-align: center;
   background: #eee;
   font-size: 340%;
   font-weight: bold;
-  color: #444;
+  color: #000;
   text-decoration: none;
   background: url("../images/button_bg.png");
 }
