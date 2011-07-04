@@ -41,20 +41,21 @@
     
     <% for i in (1..5) %>
       $("#proposal_<%= i %> .vote").click(function () {
-        $("#proposal_<%= i %>").fadeOut("slow", function() {
-          $("#proposal_<%= i + 1%>").fadeIn("slow");
+        $("#proposal_<%= i %>").fadeOut("fast", function() {
+          $("#proposal_<%= i + 1%>").fadeIn("fast");
         });
       });
     <% end %>
 
     $("#proposal_5 .vote").click(function () {
-      $("#proposal_5").fadeOut("slow", function() {
+      $("#proposal_5").fadeOut("fast", function() {
         $("#proposals_items").hide();
-        $("#confirmation").fadeIn("slow");
+        $("#confirmation").fadeIn("fast");
       });
     });
   });
 </script>
+
 
 <script type="text/javascript" charset="utf-8">
   <% for i in (1..5) %>
@@ -68,47 +69,45 @@
 
 
 <script type="text/javascript" charset="utf-8">
-  
-  function sendVote()
-  {
-
-  var votos = [];
-  
-  for (var i = 1; i <= 5; i ++)
-  {
-    var propElem = document.getElementById("cp_prop_" + i);     
-    var prop = propElem.innerHTML;    
-    var votoElem = document.getElementById("cp_voto_" + i);    
-    var valorVoto = votoElem.innerHTML;
+  $(function(){
     
-    votos.push({vote:prop, propossal:valorVoto});
+    var crypter = $('#crypter').get(0),
+        signer = {
+          sign: function(vote) { return 'fake_signature' }
+        };
     
-  }
-  
-  var sVotos = JSON.stringify(votos);
-  
- // var hash = crypter.vote(sVotos); 
-  
-  document.write("<p>" + sVotos + "</p>");
-  
-  }
-  
+    $('#send_button a').click(function(e) {
+      e.preventDefault();
+      $('#params').html(
+        JSON.stringify(
+          $('.confirmation').map(function(e){
+            id = $(this).attr('id');
+            clearVote = $("#" + id + " .choice").text();
+            proposal  = $("#" + id + " .title").text();
+            vote      = crypter.encrypt(clearVote) + "";
+            signature = signer.sign(vote);
+          
+            return { proposal: proposal, clearVote: clearVote, vote: vote, signature: signature }
+          }).toArray()
+        )
+      );
+    });
+    
+  });
 </script>
 
+<applet id="crypter" code="org.agora.verificatum.AppletVerificatum.class" archive="/lib/verificatum.jar, /lib/jgmpmee.jar" width="0" height="0"></applet>
 
 <div id="confirmation">
-  <applet id="crypter" code="org.agora.VotingApplet.class" archive="/lib/agora-applet.jar, /lib/verificatum.jar, /lib/google-gson-stream-1.7.1.jar" width="0" height="0"></applet>
-  
-    <form>    
       <ul>
         <% @proposals.each_with_index do |proposal, index| %>
-          <li id="confirmation_proposal_<%= index + 1 %>">
+          <li class="confirmation" id="confirmation_proposal_<%= index + 1 %>">
             <h3>
               <span class="number"><%= index + 1 %></span>
-              <span id="cp_prop_<%= index + 1 %>" class="title"><%= proposal.name %></span>
+              <span class="title"><%= proposal.name %></span>
             </h3>
-            <span id="cp_voto_<%= index + 1 %>" class="choice"></span>
- 			      <span class="change"><%= link_to "<< cambiar", "" %></span>
+            <span class="choice"></span>
+ 			<span class="change"><%= link_to "<< cambiar", "" %></span>
           </li>
         <% end %>
       </ul>
