@@ -414,7 +414,42 @@ header h1 {
 	color: #fff;
 }
 
+#wait {
+	display: none;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width:100%;
+    height:100%;
+    text-align:center;
+    z-index: 1000;
+    background-image:url("../images/background-trans.png");	
+}
 
+#wait div {
+	 width: 470px;
+	 height: 110px;
+	 margin: 200px auto;
+     background-color: #fff;
+     padding:15px;
+     font-size: 340%;
+     text-align:center;
+	 font-weight: bold;
+}
+
+.borderradius #wait div {
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	-webkit-border-radius: 8px;
+}
+
+.boxshadow #wait div {
+	box-shadow: 1px 1px 20px #000;
+	-moz-box-shadow: 1px 1px 20px #000;
+    -webkit-box-shadow: 1px 1px 20px #000;
+	-webkit-box-shadow: 1px 1px 20px #000;
+}
 
 /* Footer */
 
