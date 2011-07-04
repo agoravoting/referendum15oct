@@ -78,7 +78,7 @@
     
     $('#send_button a').click(function(e) {
       e.preventDefault();
-      $('#wait').show('slow', function(e) {
+      $('#wait').fadeIn('fast', function(e) {
         $('.confirmation').each(function(e){
           var proposal   = $(this).attr('id');
           proposal_id    = $("#" + proposal + " input").attr("value");
