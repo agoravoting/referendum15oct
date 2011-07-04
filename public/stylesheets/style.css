@@ -132,21 +132,39 @@ header h1 {
     float: left;
 	width: 440px;
 	height: 270px;
-	padding: 70px 90px 70px 90px;
+	padding: 100px 90px 90px 90px;
 	text-align: center;
 }
 
-#insert_dnie_icon {
+#insert_dnie_icon, #retrieve_dnie_icon {
     float: right;
-    padding-top: 30px;
+    padding-top: 50px;
 	width: 330px;
-	height: 370px;	
 }
 
 #welcome_text h2 {
   font-size: 550%;		
 }
 
+
+/* Final Page */
+
+#goodbye_text {
+	width: 960px;
+	height: 270px;
+	padding: 90px 0;
+	text-align: center;
+}
+
+#goodbye_text h2 {
+  font-size: 650%;		
+}
+
+#goodbye_text h3 {
+  margin-top: 20px;
+  font-size: 350%;
+  color: #888;	
+}
 
 /* Proposals */
 
