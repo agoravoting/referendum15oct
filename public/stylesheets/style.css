@@ -111,14 +111,17 @@ header li {
 
 header h1 {
   font-size: 138.5%;
-  padding: 10px 0 0 0;
+  padding: 5px 10px 5px 0;
+  height: 20px;
   text-transform: uppercase;
-  float: right;
+  text-align: right;
+  background: url("../images/title_bg.png") #444;
+  color: #fff;
 }
 
 #instructions h2 {
   font-size: 198%;
-  padding: 0 0 5px 0;
+  padding: 10px 0 5px 0;
   border-bottom: 3px solid #444;
   clear: right;
 }
@@ -274,7 +277,7 @@ header h1 {
 #confirmation .number, #confirmation .title, #confirmation .choice, #confirmation .change a {
   display:block;
   float: left;
-  background: #eee;
+  background: #f6f6f6;
 }
 
 #confirmation .choice, #confirmation .change a {
