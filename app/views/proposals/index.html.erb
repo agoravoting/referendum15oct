@@ -97,23 +97,23 @@
 <applet id="crypter" code="org.agora.verificatum.AppletVerificatum.class" archive="/lib/verificatum.jar, /lib/jgmpmee.jar" width="0" height="0"></applet>
 
 <div id="confirmation">
-      <ul>
-        <% @proposals.each_with_index do |proposal, index| %>
-          <li class="confirmation" id="confirmation_proposal_<%= index + 1 %>">
-            <h3>
-              <span class="number"><%= index + 1 %></span>
-              <span class="title"><%= proposal.name %></span>
-              <%= hidden_field_tag 'proposal_id', proposal.id, :id => "" %>
-            </h3>
-            <span class="choice"></span>
- 			      <span class="change"><%= link_to "<< cambiar", "" %></span>
-          </li>
-        <% end %>
-      </ul>
-      
-     <div id="send_button">
-      <%= link_to "Envía tu voto", retrieve_dni_path %>
-    </div>
+  <ul>
+    <% @proposals.each_with_index do |proposal, index| %>
+      <li class="confirmation" id="confirmation_proposal_<%= index + 1 %>">
+        <h3>
+          <span class="number"><%= index + 1 %></span>
+          <span class="title"><%= proposal.name %></span>
+          <%= hidden_field_tag 'proposal_id', proposal.id, :id => "" %>
+        </h3>
+        <span class="choice"></span>
+ 	      <span class="change"><%= link_to "<< cambiar", "" %></span>
+      </li>
+    <% end %>
+  </ul>
+  
+  <div id="send_button">
+   <%= link_to "Envía tu voto", retrieve_dni_path %>
+  </div>
 </div>
 
 <div id='wait' style="display:none">
