@@ -78,17 +78,19 @@
     
     $('#send_button a').click(function(e) {
       e.preventDefault();
-      $('.confirmation').each(function(e){
-        var proposal   = $(this).attr('id');
-        proposal_id    = $("#" + proposal + " input").attr("value");
-        clear_vote     = $("#" + proposal + " .choice").text();
-        encrypted_vote = crypter.encrypt(clear_vote) + "";
-        signature      = signer.sign(encrypted_vote);
-      
-        $.post("votes", { "vote" : { proposal_id: proposal_id, clear_vote: clear_vote, encrypted_vote: encrypted_vote, signature: signature } })
-      })
+      $('#wait').show('slow', function(e) {
+        $('.confirmation').each(function(e){
+          var proposal   = $(this).attr('id');
+          proposal_id    = $("#" + proposal + " input").attr("value");
+          clear_vote     = $("#" + proposal + " .choice").text();
+          encrypted_vote = crypter.encrypt(clear_vote) + "";
+          signature      = signer.sign(encrypted_vote);
+        
+          $.post("votes", { "vote" : { proposal_id: proposal_id, clear_vote: clear_vote, encrypted_vote: encrypted_vote, signature: signature } })
+        })
+      });
     });
-    
+  
   });
 </script>
 
@@ -112,6 +114,8 @@
      <div id="send_button">
       <%= link_to "Envía tu voto", retrieve_dni_path %>
     </div>
-    </form>
-  </applet>
+</div>
+
+<div id='wait' style="display:none">
+  <strong>Encriptando su voto... Por favor espere.</strong>
 </div>
