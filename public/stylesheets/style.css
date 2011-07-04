@@ -211,6 +211,7 @@ header h1 {
 	width: 320px;
 	float: left;
 	height: 205px;
+	text-align: center;
 }
 
 #proposals_buttons {
