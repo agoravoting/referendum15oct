@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Proposal:</b>
+  <%= @vote.proposal_id %>
+</p>
+
+<p>
+  <b>Clearvote:</b>
+  <%= @vote.clear_vote %>
+</p>
+
+<p>
+  <b>Encrypted vote:</b>
+  <%= @vote.encrypted_vote %>
+</p>
+
+<p>
+  <b>Signature:</b>
+  <%= @vote.signature %>
+</p>
+
+
+<%= link_to 'Edit', edit_vote_path(@vote) %> |
+<%= link_to 'Back', votes_path %>

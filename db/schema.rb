@@ -10,11 +10,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110702205826) do
+ActiveRecord::Schema.define(:version => 20110703234118) do
 
   create_table "proposals", :force => true do |t|
     t.string   "name"
     t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "votes", :force => true do |t|
+    t.integer  "proposal_id"
+    t.string   "clear_vote"
+    t.string   "encrypted_vote"
+    t.string   "signature"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

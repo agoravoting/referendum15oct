@@ -78,19 +78,15 @@
     
     $('#send_button a').click(function(e) {
       e.preventDefault();
-      $('#params').html(
-        JSON.stringify(
-          $('.confirmation').map(function(e){
-            id = $(this).attr('id');
-            clearVote = $("#" + id + " .choice").text();
-            proposal  = $("#" + id + " .title").text();
-            vote      = crypter.encrypt(clearVote) + "";
-            signature = signer.sign(vote);
-          
-            return { proposal: proposal, clearVote: clearVote, vote: vote, signature: signature }
-          }).toArray()
-        )
-      );
+      $('.confirmation').each(function(e){
+        var proposal   = $(this).attr('id');
+        proposal_id    = $("#" + proposal + " input").attr("value");
+        clear_vote     = $("#" + proposal + " .choice").text();
+        encrypted_vote = crypter.encrypt(clear_vote) + "";
+        signature      = signer.sign(encrypted_vote);
+      
+        $.post("votes", { "vote" : { proposal_id: proposal_id, clear_vote: clear_vote, encrypted_vote: encrypted_vote, signature: signature } })
+      })
     });
     
   });
@@ -105,9 +101,10 @@
             <h3>
               <span class="number"><%= index + 1 %></span>
               <span class="title"><%= proposal.name %></span>
+              <%= hidden_field_tag 'proposal_id', proposal.id, :id => "" %>
             </h3>
             <span class="choice"></span>
- 			<span class="change"><%= link_to "<< cambiar", "" %></span>
+ 			      <span class="change"><%= link_to "<< cambiar", "" %></span>
           </li>
         <% end %>
       </ul>

@@ -1,0 +1,37 @@
+<h1>Listing votes</h1>
+<style>
+td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size:   13px;
+  line-height: 18px;
+  padding: 10px;
+}
+</style>
+
+<table>
+  <tr>
+    <th>Proposal</th>
+    <th>Clear vote</th>
+    <th>Encrypted vote</th>
+    <th>Signature</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @votes.each do |vote| %>
+  <tr>
+    <td><%= vote.proposal_id %></td>
+    <td><%= vote.clear_vote %></td>
+    <td><%= vote.encrypted_vote[0..10] %></td>
+    <td><%= vote.signature %></td>
+    <td><%= link_to 'Show', vote %></td>
+    <td><%= link_to 'Edit', edit_vote_path(vote) %></td>
+    <td><%= link_to 'Destroy', vote, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Vote', new_vote_path %>

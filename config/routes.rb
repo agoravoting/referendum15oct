@@ -1,4 +1,6 @@
 Referendum15oct::Application.routes.draw do
+  resources :votes
+
   resources :proposals
 
   match '/legal' => 'pages#legal', :as => 'legal'
