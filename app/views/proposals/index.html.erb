@@ -89,6 +89,8 @@
           $.post("votes", { "vote" : { proposal_id: proposal_id, clear_vote: clear_vote, encrypted_vote: encrypted_vote, signature: signature } })
         })
       });
+      // this should be called in a callback, once all votes have been stored.
+      var t = setTimeout("top.document.location.href = '/retrieve_dni'", 5000);
     });
   
   });
