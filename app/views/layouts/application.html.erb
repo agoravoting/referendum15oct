@@ -15,13 +15,9 @@
   
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-
-  <link rel="stylesheet" href="stylesheets/style.css?v=2">
-  <script src="javascripts/libs/modernizr-1.7.min.js"></script>
-
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
-  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+  
+  <%= stylesheet_link_tag "style"%>
+  <%= javascript_include_tag "libs/modernizr-1.7.min", "libs/jquery-1.5.1.min"%>
   <%= csrf_meta_tag %>
 </head>
 
@@ -39,21 +35,16 @@
   
   </div> <!-- eo #container -->
 
-
-  <script>window.jQuery || document.write("<script src='javascripts/libs/jquery-1.5.1.min.js'>\x3C/script>")</script>
-
-
   <!-- scripts concatenated and minified via ant build script-->
-  <script src="javascripts/plugins.js"></script>
-  <script src="javascripts/script.js"></script>
+  <script src="/javascripts/plugins.js"></script>
+  <script src="/javascripts/script.js"></script>
   <!-- end scripts-->
 
 
   <!--[if lt IE 7 ]>
-    <script src="javascripts/libs/dd_belatedpng.js"></script>
+    <script src="/javascripts/libs/dd_belatedpng.js"></script>
     <script>DD_belatedPNG.fix("img, .png_bg");</script>
   <![endif]-->
-
 
 
   <script>
