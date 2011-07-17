@@ -86,7 +86,7 @@
           var encrypted_vote = crypter.encrypt(clear_vote) + "";
           var signature      = signer.sign(encrypted_vote);
         
-          $.post("votes", { "vote" : { proposal_id: proposal_id, clear_vote: clear_vote, encrypted_vote: encrypted_vote, signature: signature } })
+          $.post("proposals/" + proposal_id + "/votes", { "vote" : { proposal_id: proposal_id, clear_vote: clear_vote, encrypted_vote: encrypted_vote, signature: signature } })
         })
       });
       // this should be called in a callback, once all votes have been stored.
