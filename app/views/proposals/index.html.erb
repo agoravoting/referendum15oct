@@ -96,7 +96,9 @@
   });
 </script>
 
-<applet id="crypter" code="org.agora.verificatum.AppletVerificatum.class" archive="/lib/verificatum.jar, /lib/jgmpmee.jar" width="0" height="0"></applet>
+<applet id="crypter" code="org.agora.verificatum.AppletVerificatum.class" archive="/lib/verificatum.jar, /lib/jgmpmee.jar" width="0" height="0">
+  <param name="combined_public_key" value="<%= @combined_public_key %>">
+</applet>
 
 <div id="confirmation">
   <ul>
@@ -113,9 +115,11 @@
     <% end %>
   </ul>
   
+  
   <div id="send_button">
    <%= link_to "Envía tu voto", retrieve_dni_path %>
   </div>
+  
 </div>
 
 <div id='wait'>
