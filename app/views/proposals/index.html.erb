@@ -81,10 +81,10 @@
       $('#wait').fadeIn('fast', function(e) {
         $('.confirmation').each(function(e){
           var proposal   = $(this).attr('id');
-          proposal_id    = $("#" + proposal + " input").attr("value");
-          clear_vote     = $("#" + proposal + " .choice").text();
-          encrypted_vote = crypter.encrypt(clear_vote) + "";
-          signature      = signer.sign(encrypted_vote);
+          var proposal_id    = $("#" + proposal + " input").attr("value");
+          var clear_vote     = $("#" + proposal + " .choice").text();
+          var encrypted_vote = crypter.encrypt(clear_vote) + "";
+          var signature      = signer.sign(encrypted_vote);
         
           $.post("votes", { "vote" : { proposal_id: proposal_id, clear_vote: clear_vote, encrypted_vote: encrypted_vote, signature: signature } })
         })
