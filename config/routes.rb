@@ -1,7 +1,7 @@
 Referendum15oct::Application.routes.draw do
-  resources :votes
-
-  resources :proposals
+  resources :proposals do
+    resources :votes
+  end
 
   match '/legal' => 'pages#legal', :as => 'legal'
   match '/privacidad'  => 'pages#privacy', :as => 'privacy'
