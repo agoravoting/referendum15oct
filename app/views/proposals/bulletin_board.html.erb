@@ -1,0 +1,14 @@
+<h1>Bulletin Board</h1>
+
+<h2><%= @proposal.name %></h2>
+
+<h3>Authorities</h3>
+
+<div>
+  <% @authorities.each do |authority| %>
+    Name:       <span><%= authority[:name] %>     </span><br/>
+    Public Key: <span><%= authority[:public_key]%></span><br/>
+  <% end %>
+  
+  <%= link_to "Votes", proposal_votes_path(@proposal) %>
+</div>
