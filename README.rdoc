@@ -85,6 +85,12 @@ Application to vote with your electronic ID in the Referedum of October 15th.
   Jorge Dias
 
   Carlos Geijo
+  
+  Pablo Gomez
+  
+  Eduardo Robles
+  
+  Fernando Balle
 
 == License:
 
