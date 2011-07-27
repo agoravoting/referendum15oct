@@ -1,6 +1,6 @@
 = Referendum 15 de octubre
  
-* http://referendum15oct.heroku.com/
+* http://referendum15oct.heroku.com
  
 == Description:
 
@@ -42,13 +42,11 @@ Application to vote with your electronic ID in the Referedum of October 15th.
 
      6. Wait for comments from maintainers or code merge
 
+     IRC: irc.freenode.net #agoraciudadana
+     
 == More info
 
-  Integration of Verificatum's Security
-
 * http://wiki.agoraciudadana.org/index.php?title=Integraci%C3%B3n_Verificatum_con_%C3%81gora#Lista_de_tareas_de_integraci.C3.B3n
-
-  irc: irc.freenode.net #agoraciudadana
   
 == Credits:
 
