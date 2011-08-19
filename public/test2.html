@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset='utf-8'/>
-    <title>Refer√©ndum 15-oct</title>
+    <title>Refer®¶ndum 15-oct</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
     
@@ -13,21 +13,14 @@
 
         $('form').submit(function(e) {
             e.preventDefault()
-            var ballot = [
-                {
-                    'vote': $(this).val(), // id number of the option selected by the user
-                    'propossal': $(this).attr('name') // propossal id number
-                },
-                {
-                    'vote': $(this).val(),
-                    'propossal': $(this).attr('name')
-                },
-                {
-                    'vote': $(this).val(),
-                    'propossal': $(this).attr('name')
-                }
-            ];
-            var hash = applet.vote(ballot);
+            var ballotArray = [];
+            for (int i = 0; i < 3; i++) {
+                var vote =  $(this).val(); // id number of the option selected by the user
+                var propossal = $(this).attr('name'); // propossal id number
+                ballot[i*2] = vote;
+                ballot[i*2 + 1] = propossal;
+            }
+            var hash = applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain);
             if (hash != "FAIL") {
                 // success!
             } else {
@@ -72,7 +65,7 @@
   </head>
   <body>
     <h1>Refer√©ndum 15 Oct</h1>
-    <applet id="applet" code="org.agora.VotingApplet.class" archive="/lib/agora-applet.jar /lib/verificatum.jar /lib/google-gson-stream-1.7.1.jar" width="0" height="0"></applet>
+    <applet id="applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar lib/bcprov-1.45.jar /lib/verificatum.jar /lib/agora-applet.jar" width="0" height="0"></applet>
     <form>    
       <ol>
         <li>

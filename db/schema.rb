@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110703234118) do
+ActiveRecord::Schema.define(:version => 20110819225800) do
 
   create_table "proposals", :force => true do |t|
     t.string   "name"
@@ -21,9 +21,17 @@ ActiveRecord::Schema.define(:version => 20110703234118) do
 
   create_table "votes", :force => true do |t|
     t.integer  "proposal_id"
-    t.string   "clear_vote"
+    t.string "dnie_certificate"
+    t.string "signed_votes"
+    t.string "votes_signature"
     t.string   "encrypted_vote"
-    t.string   "signature"
+    t.string   "a_factor"
+    t.string   "d_factor"
+    t.string   "u_factor"
+    t.string   "voter_cif"
+    t.string   "voter_name"
+    t.string   "voter_surname1"
+    t.string   "voter_surname2"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
