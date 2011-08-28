@@ -2,30 +2,34 @@
 <html>
   <head>
     <meta charset='utf-8'/>
-    <title>Refer��ndum 15-oct</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-    <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+    <title>Refer&eacute;ndum 15-oct</title>
+    <script src="javascripts/jquery.min.js"></script>
+    <script src="javascripts/json2.js"></script>
     
     <script type="text/javascript" charset="utf-8">
       $(function(){
 
-        var applet = $('#applet').get(0);
+        var applet = $('#java_applet').get(0);
+        console.log("applet = ");
+        console.log(applet);
 
         $('form').submit(function(e) {
-            e.preventDefault()
+            e.preventDefault();
             var ballotArray = [];
-            for (int i = 0; i < 3; i++) {
+            $('input:checked').map(function(){
                 var vote =  $(this).val(); // id number of the option selected by the user
                 var propossal = $(this).attr('name'); // propossal id number
-                ballot[i*2] = vote;
-                ballot[i*2 + 1] = propossal;
-            }
-            var hash = applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain);
+                ballotArray[ballotArray.length] = vote;
+                ballotArray[ballotArray.length] = propossal;
+            });
+            console.log("ballot = " + ballotArray.join(','));
+            var hash = applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain + ":" + location.port);
             if (hash != "FAIL") {
-                // success!
+                $('#applet_info').html("SUCCESS");
             } else {
-                // Fail
+                $('#applet_info').html("FAIL");
             }
+            return false;
         });
       });
     </script>
@@ -51,8 +55,8 @@
       }
       
       applet {
-        width: 1px;
-        height: 1px;
+        width: 200px;
+        height: 50px;
         float: left;
       }
       
@@ -64,25 +68,25 @@
     </style>
   </head>
   <body>
-    <h1>Referéndum 15 Oct</h1>
-    <applet id="applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar lib/bcprov-1.45.jar /lib/verificatum.jar /lib/agora-applet.jar" width="0" height="0"></applet>
-    <form>    
+    <h1>Refer&eacute;ndum 15 Oct</h1>
+    <applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="200" height="100"></applet>
+    <form>
       <ol>
         <li>
           <span class='title'>Reforma del sistema electoral</span>
         
           <ul class='options'>
             <li>
-              <label id='p1_si'>Sí</label>
-              <input type='radio' name='p1' value='si' id='p1_si'/>
+              <label id='p1_si'>S&iacute;</label>
+              <input type='radio' name='1' value='0' id='p1_si'/>
             </li>
             <li>
               <label id='p1_no'>No</label>
-              <input type='radio' name='p1' value='no' id='p1_no'/>
+              <input type='radio' name='1' value='1' id='p1_no'/>
             </li>
             <li>
-              <label id='p1_abs'>Abstención</label>
-              <input type='radio' name='p1' value='abs' id='p1_abs'/>
+              <label id='p1_abs'>Abstenci&oacute;n</label>
+              <input type='radio' name='1' value='2' id='p1_abs'/>
             </li>
           </ul>
 
@@ -92,79 +96,83 @@
         
           <ul class='options'>
             <li>
-              <label id='p2_si'>Sí</label>
-              <input type='radio' name='p2' value='si' id='p2_si'/>
+              <label id='p2_si'>S&iacute;</label>
+              <input type='radio' name='2' value='0' id='p2_si'/>
             </li>
             <li>
               <label id='p2_no'>No</label>
-              <input type='radio' name='p2' value='no' id='p2_no'/>
+              <input type='radio' name='2' value='1' id='p2_no'/>
             </li>
             <li>
-              <label id='p2_abs'>Abstención</label>
-              <input type='radio' name='p2' value='abs' id='p2_abs'/>
+              <label id='p2_abs'>Abstenci&oacute;n</label>
+              <input type='radio' name='2' value='2' id='p2_abs'/>
             </li>
           </ul>
         </li>
         <li>
-          <span class='title'>Separación de poderes</span>
+          <span class='title'>Separaci&oacute;n de poderes</span>
         
           <ul class='options'>
             <li>
-              <label id='p3_si'>Sí</label>
-              <input type='radio' name='p3' value='si' id='p3_si'/>
+              <label id='p3_si'>S&iacute;</label>
+              <input type='radio' name='3' value='0' id='p3_si'/>
             </li>
             <li>
               <label id='p3_no'>No</label>
-              <input type='radio' name='p3' value='no' id='p3_no'/>
+              <input type='radio' name='3' value='1' id='p3_no'/>
             </li>
             <li>
-              <label id='p3_abs'>Abstención</label>
-              <input type='radio' name='p3' value='abs' id='p3_abs'/>
+              <label id='p3_abs'>Abstenci&oacute;n</label>
+              <input type='radio' name='3' value='2' id='p3_abs'/>
             </li>
           </ul>
         </li>
         <li>
-          <span class='title'>Una democracia más participativa</span>
-        
+          <span class='title'>Una democracia m&aacute;s participativa</span>
+
           <ul class='options'>
             <li>
-              <label id='p4_si'>Sí</label>
-              <input type='radio' name='p4' value='si' id='p4_si'/>
+              <label id='p4_si'>S&iacute;</label>
+              <input type='radio' name='4' value='0' id='p4_si'/>
             </li>
             <li>
               <label id='p4_no'>No</label>
-              <input type='radio' name='p4' value='no' id='p4_no'/>
+              <input type='radio' name='4' value='1' id='p4_no'/>
             </li>
             <li>
-              <label id='p4_abs'>Abstención</label>
-              <input type='radio' name='p4' value='abs' id='p4_abs'/>
+              <label id='p4_abs'>Abstenci&oacute;n</label>
+              <input type='radio' name='4' value='2' id='p4_abs'/>
             </li>
           </ul>
         </li>
         <li>
-          <span class='title'>Economía responsable</span>
+          <span class='title'>Econom&iacute;a responsable</span>
         
           <ul class='options'>
             <li>
-              <label id='p5_si'>Sí</label>
-              <input type='radio' name='p5' value='si' id='p5_si'/>
+              <label id='p5_si'>S&iacute;</label>
+              <input type='radio' name='5' value='0' id='p5_si'/>
             </li>
             <li>
               <label id='p5_no'>No</label>
-              <input type='radio' name='p5' value='no' id='p5_no'/>
+              <input type='radio' name='5' value='1' id='p5_no'/>
             </li>
             <li>
-              <label id='p5_abs'>Abstención</label>
-              <input type='radio' name='p5' value='abs' id='p5_abs'/>
+              <label id='p5_abs'>Abstenci&oacute;n</label>
+              <input type='radio' name='5' value='2' id='p5_abs'/>
             </li>
           </ul>
         </li>
       </ol>
       
       <input type='submit' value='Vota!!!'/>
-      
+
       <pre id='params'>
       </pre>
+
+      <div style="border: 1px red; width: 500px; height: 100px" id="applet_info">
+      aaaaaaaaaaaa
+      </div>
     
     </form>
   </body>
