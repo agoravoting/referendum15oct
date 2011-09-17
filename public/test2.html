@@ -7,6 +7,9 @@
     <script src="javascripts/json2.js"></script>
     
     <script type="text/javascript" charset="utf-8">
+        function async_update(code, description) {
+            $('#applet_info').html(code + ": " + description);
+        }
       $(function(){
 
         var applet = $('#java_applet').get(0);
@@ -23,12 +26,7 @@
                 ballotArray[ballotArray.length] = propossal;
             });
             console.log("ballot = " + ballotArray.join(','));
-            var hash = applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain + ":" + location.port);
-            if (hash != "FAIL") {
-                $('#applet_info').html("SUCCESS");
-            } else {
-                $('#applet_info').html("FAIL");
-            }
+            applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain + ":" + location.port);
             return false;
         });
       });
