@@ -3,6 +3,7 @@ class CreateProposals < ActiveRecord::Migration
     create_table :proposals do |t|
       t.string :name
       t.text :description
+      t.text :public_key
 
       t.timestamps
     end

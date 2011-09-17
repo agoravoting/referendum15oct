@@ -1,8 +1,10 @@
 Referendum15oct::Application.routes.draw do
   resources :proposals do
-    resources :votes
     get :bulletin_board, :on => :member
+    get :public_key, :on => :member
   end
+
+  resources :votes
 
   match '/legal' => 'pages#legal', :as => 'legal'
   match '/privacidad'  => 'pages#privacy', :as => 'privacy'

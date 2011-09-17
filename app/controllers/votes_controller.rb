@@ -2,16 +2,15 @@ class VotesController < InheritedResources::Base
   belongs_to :proposal
 
   # POST /votes
-  # POST /votes.xml
   def create
 
     args = [params[:dnie_certificate], params[:votes_signature]]
 
     params[:voting_id].each_index { |index|
-        voting = Voting.find(params[:voting_id][index])
+        proposal = Proposal.find(params[:voting_id][index])
         args += [
             params[:encrypted_vote][index],
-            voting.public_key,
+            proposal.public_key,
             params[:voting_id][index],
             params[:a_factor][index],
             params[:d_factor][index],
@@ -31,19 +30,19 @@ class VotesController < InheritedResources::Base
         # register the votes
         signed_votes = ActiveSupport::JSON.encode(params)
         params[:voting_id].each_index { |index|
-            p = Post.new(
+            p = Vote.new(
                 :proposal_id => params[:voting_id][index],
-                :dnie_certificate => params[:dnie_certificate],
-                :votes_signature => params[:votes_signature],
-                :signed_votes => signed_votes,
-                :encrypted_vote => params[:encrypted_vote][index],
-                :a_factor => params[:a_factor][index],
-                :d_factor => params[:d_factor][index],
-                :u_factor => params[:u_factor][index],
-                :voter_cif => cif,
                 :voter_name => name,
                 :voter_surname1 => surname1,
                 :voter_surname2 => surname2,
+                :voter_cif => cif,
+                :encrypted_vote => params[:encrypted_vote][index],
+                :dnie_certificate => params[:dnie_certificate],
+                :votes_signature => params[:votes_signature],
+                :signed_votes => signed_votes,
+                :a_factor => params[:a_factor][index],
+                :d_factor => params[:d_factor][index],
+                :u_factor => params[:u_factor][index],
             )
             p.save
         }
