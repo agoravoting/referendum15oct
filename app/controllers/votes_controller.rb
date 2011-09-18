@@ -1,9 +1,8 @@
 class VotesController < InheritedResources::Base
   belongs_to :proposal
-
+  
   # POST /votes
   def create
-
     args = [params[:dnie_certificate], params[:votes_signature]]
 
     params[:voting_id].each_index { |index|
@@ -18,7 +17,7 @@ class VotesController < InheritedResources::Base
         ]
     }
 
-    result = %x[votecheck.sh #{args.join(' ')}]
+    result = %x[../applet-verificatum/votecheck.sh #{args.join(' ')}]
 
     if result != 'FAIL'
         # "CIF (with number),Name,Surname1,Surname2"
