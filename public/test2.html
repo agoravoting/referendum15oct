@@ -7,36 +7,108 @@
     <script src="javascripts/json2.js"></script>
     
     <script type="text/javascript" charset="utf-8">
+        var restartApplet = false;
+        var appletLoadedOnce = false;
+        var appletCode = '<applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="200" height="100"></applet>';
+
+        // This are some checks that are doing at startup
+        if (!navigator.javaEnabled()) {
+            $('#applet_info').html("ERROR: JAVA IS DISABLED");
+        } else if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
+            $('#applet_info').html("ERROR: NOT USING FIREFOX");
+        } else {
+            setTimeout("checkStatus()", 1000);
+        }
+
+        function checkStatus() {
+            console.log("inside checkStatus" + ", appletLoadedOnce = " + appletLoadedOnce);
+            // If applet is not loaded
+            try {
+                var applet = $('#java_applet').get(0);
+                console.log("applet = " + applet);
+                applet.getAppletInfo();
+                if (!appletLoadedOnce) {
+                    appletLoadedOnce = true;
+                }
+            } catch (error) {
+                console.log("error..")
+                // It might be still loading
+                if (restartApplet) {
+                    $('#applet_info').html("RE-Loading java applet, please wait..");
+                    $('#java_applet_wrapper').html(appletCode);
+                    restartApplet = false;
+                    appletLoadedOnce = false;
+                } else {
+                    if (!appletLoadedOnce) {
+                        $('#applet_info').html("Loading java applet, please wait..");
+                    } else {
+                        // Applet crashed/closed!
+                        $('#applet_info').html("ERROR: JAVA APPLET CRASHED");
+                    }
+                }
+            }
+            // Set the timeout again
+            setTimeout("checkStatus()", 2000);
+        }
+
         String.prototype.startsWith = function(str) {
             return this.match("^" + str) == str;
         }
 
+        function triggerAppletRestart() {
+            restartApplet = true;
+            var applet = $('#java_applet').get(0);
+            applet.terminateApplet();
+            $('#java_applet_wrapper').html("empty");
+        }
+
         function async_exception(className, description) {
+            // Note that async_exception function is synchrnously executed by
+            // the applet, so we cannot directly call to any applet's function
+            // directly; that's why instead of doing a direct call to
+            // triggerAppletRestart(); we use setTimeout.
             if (className == "java.security.ProviderException"
                 && description == "Initialization failed") {
                 // No card reader
                 // TODO: java applet seems to need to be restarted to work
                 $('#applet_info').html("NO CARD READER " + className + ": " + description);
+                setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.KeyStoreException" &&
                 description == "PKCS11 not found") {
                 // No card inside the card reader
                 $('#applet_info').html("NO CARD " + className + ": " + description);
+                setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.ProviderException" &&
                 description == "sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR") {
-                // User didn't want to sign the vote!
                 $('#applet_info').html("USER DID NOT WANT TO SIGN " + className + ": " + description);
+                setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$PinCancelledByUser") {
-                // User didn't want to sign the vote!
                 $('#applet_info').html("USER CANCELLED TO WRITE PIN" + className + ": " + description);
+                setTimeout("triggerAppletRestart()", 1);
+
+            } else if (className == "org.agora.VotingApplet$BallotCastingError") {
+                $('#applet_info').html("ERROR IN THE SERVER SIDE" + className + ": " + description);
+
+            } else if (className == "org.agora.VotingApplet$SignatureCertificateNotFoundError") {
+                $('#applet_info').html("CERTIFICATE FOR THE SIGNATURE NOT FOUND" + className + ": " + description);
+                setTimeout("triggerAppletRestart()", 1);
+
+            } else if (className == "org.agora.VotingApplet$CertificateWithoutPrivateKeyError") {
+                $('#applet_info').html("CERTIFICATE WITHOUT PRIVATE KEY" + className + ": " + description);
+                setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.InvalidKeyException" &&
                 description.startsWith("No installed provider supports this key:")) {
                 // TODO: Java applet needs to be reestarted, applet does not allow
                 // to be reused, apparently
                 $('#applet_info').html("INVALID KEY " + className + ": " + description);
+                setTimeout("triggerAppletRestart()", 1);
+
+            } else if (className == "org.agora.VotingApplet$InitTimeoutError") {
+                $('#applet_info').html("REMOVE DNIE AND INSERT AGAIN " + className + ": " + description);
 
             } else {
                 $('#applet_info').html("Unknown error " + className + ": " + description);
@@ -47,11 +119,8 @@
         }
       $(function(){
 
-        var applet = $('#java_applet').get(0);
-        console.log("applet = ");
-        console.log(applet);
-
         $('form').submit(function(e) {
+            var applet = $('#java_applet').get(0);
             e.preventDefault();
             var ballotArray = [];
             $('input:checked').map(function(){
@@ -102,7 +171,9 @@
   </head>
   <body>
     <h1>Refer&eacute;ndum 15 Oct</h1>
-    <applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="200" height="100"></applet>
+    <div id="java_applet_wrapper">
+        <applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="200" height="100"></applet>
+    </div>
     <form>
       <ol>
         <li>
