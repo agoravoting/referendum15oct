@@ -43,7 +43,11 @@ Application to vote with your electronic ID in the Referedum of October 15th.
      6. Wait for comments from maintainers or code merge
 
      IRC: irc.freenode.net #agoraciudadana
-     
+
+== Gotchas
+  
+  If you run into a java class not found error, try running the app with unicorn_rails instead of rails server.
+       
 == More info
 
 * http://wiki.agoraciudadana.org/index.php?title=Integraci%C3%B3n_Verificatum_con_%C3%81gora#Lista_de_tareas_de_integraci.C3.B3n

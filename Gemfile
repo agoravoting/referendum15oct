@@ -9,9 +9,6 @@ gem 'rake', '0.8.7'
 gem 'sqlite3'
 gem 'inherited_resources'
 
-# Use unicorn as the web server
-# gem 'unicorn'
-
 # Deploy with Capistrano
 # gem 'capistrano'
 
@@ -32,4 +29,5 @@ group :development, :test do
   gem 'steak'
   gem 'capybara'
   gem 'rspec-rails'
+  gem 'unicorn'
 end
