@@ -7,6 +7,7 @@
     <script src="javascripts/json2.js"></script>
     
     <script type="text/javascript" charset="utf-8">
+        var timeout;
         var restartApplet = false;
         var appletLoadedOnce = false;
         var appletCode = '<applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="200" height="100"></applet>';
@@ -17,7 +18,7 @@
         } else if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
             $('#applet_info').html("ERROR: NOT USING FIREFOX");
         } else {
-            setTimeout("checkStatus()", 1000);
+            timeout = setTimeout("checkStatus()", 1000);
         }
 
         function checkStatus() {
@@ -48,7 +49,7 @@
                 }
             }
             // Set the timeout again
-            setTimeout("checkStatus()", 2000);
+            timeout = setTimeout("checkStatus()", 2000);
         }
 
         String.prototype.startsWith = function(str) {
@@ -67,48 +68,48 @@
             // the applet, so we cannot directly call to any applet's function
             // directly; that's why instead of doing a direct call to
             // triggerAppletRestart(); we use setTimeout.
+
             if (className == "java.security.ProviderException"
                 && description == "Initialization failed") {
-                // No card reader
-                // TODO: java applet seems to need to be restarted to work
                 $('#applet_info').html("NO CARD READER " + className + ": " + description);
-                setTimeout("triggerAppletRestart()", 1);
+                timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.KeyStoreException" &&
                 description == "PKCS11 not found") {
                 // No card inside the card reader
                 $('#applet_info').html("NO CARD " + className + ": " + description);
-                setTimeout("triggerAppletRestart()", 1);
+                timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.ProviderException" &&
                 description == "sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR") {
                 $('#applet_info').html("USER DID NOT WANT TO SIGN " + className + ": " + description);
-                setTimeout("triggerAppletRestart()", 1);
+                timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$PinCancelledByUser") {
                 $('#applet_info').html("USER CANCELLED TO WRITE PIN" + className + ": " + description);
-                setTimeout("triggerAppletRestart()", 1);
+                timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$BallotCastingError") {
                 $('#applet_info').html("ERROR IN THE SERVER SIDE" + className + ": " + description);
 
             } else if (className == "org.agora.VotingApplet$SignatureCertificateNotFoundError") {
                 $('#applet_info').html("CERTIFICATE FOR THE SIGNATURE NOT FOUND" + className + ": " + description);
-                setTimeout("triggerAppletRestart()", 1);
+                timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$CertificateWithoutPrivateKeyError") {
                 $('#applet_info').html("CERTIFICATE WITHOUT PRIVATE KEY" + className + ": " + description);
-                setTimeout("triggerAppletRestart()", 1);
+                timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.InvalidKeyException" &&
                 description.startsWith("No installed provider supports this key:")) {
-                // TODO: Java applet needs to be reestarted, applet does not allow
-                // to be reused, apparently
-                $('#applet_info').html("INVALID KEY " + className + ": " + description);
-                setTimeout("triggerAppletRestart()", 1);
+                $('#applet_info').html("INVALID KEY REMOVE DNIE AND INSERT AGAIN " + className + ": " + description);
 
             } else if (className == "org.agora.VotingApplet$InitTimeoutError") {
-                $('#applet_info').html("REMOVE DNIE AND INSERT AGAIN " + className + ": " + description);
+                $('#applet_info').html("INIT TIMEOUT, REMOVE DNIE AND INSERT AGAIN " + className + ": " + description);
+
+            } else if (className == "org.agora.VotingApplet$VoteTimeoutError") {
+                $('#applet_info').html("VOTE TIMEOUT " + className + ": " + description);
+                timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else {
                 $('#applet_info').html("Unknown error " + className + ": " + description);
@@ -125,9 +126,11 @@
             var ballotArray = [];
             $('input:checked').map(function(){
                 var vote =  $(this).val(); // id number of the option selected by the user
-                var propossal = $(this).attr('name'); // propossal id number
+                var proposal = $(this).attr('name'); // proposal id number
+                var publicKey = $('#p' + proposal + '_pk').val();
                 ballotArray[ballotArray.length] = vote;
-                ballotArray[ballotArray.length] = propossal;
+                ballotArray[ballotArray.length] = proposal;
+                ballotArray[ballotArray.length] = publicKey;
             });
             console.log("ballot = " + ballotArray.join(','));
             applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain + ":" + location.port);
@@ -178,7 +181,7 @@
       <ol>
         <li>
           <span class='title'>Reforma del sistema electoral</span>
-        
+          <input type='hidden' id='p1_pk' value='00000000020000000002010000001a766572696669636174756d2e61726974686d2e505047726f7570000000000200000000010000000002010000001c766572696669636174756d2e61726974686d2e4d6f645047726f75700000000004010000008101d9f27f10e6a62b003160daea5bed498c3dc4fcbf5d4badf230ec7937cf171dc024acfee3a0064f8627319092868724b3afdd0127eafc2187f251da5d0ce61e1ed31fd33afa2edc53174fc19c3c08cc8672b85fc495003494ae78f108f050a5c1753a8a44f33f67e2a7f0b38613292550c84e7af73bb8e7575de384594a85f97b010000008100ecf93f887353158018b06d752df6a4c61ee27e5faea5d6f918763c9be78b8ee012567f71d00327c31398c84943439259d7ee8093f57e10c3f928ed2e86730f0f698fe99d7d176e298ba7e0ce1e046643395c2fe24a801a4a573c7884782852e0ba9d4522799fb3f153f859c3099492a864273d7b9ddc73abaef1c22ca542fcbd010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b2745101000000040000000100000000020100000004000000000100000004000000000000000002010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b274510100000081001309b55b9599670d198118dfefc956161fa298ceae2ef64735082e5c52c1d3bb67969096a972550671a6ed3e950fa67a23562b4c0b0bddfe316191af88ea9843179fe0ce2c079d3151ebdc90c6e132edf099e49c73f2cacf72a730f8b849a0d24fac3d3eb86d819ea45c6919141966a07f709add6cc2a09e919a8d3585438009' />
           <ul class='options'>
             <li>
               <label id='p1_si'>S&iacute;</label>
@@ -197,6 +200,7 @@
         </li>
         <li>
           <span class='title'>Transparencia</span>
+          <input type='hidden' id='p1_pk' value='00000000020000000002010000001a766572696669636174756d2e61726974686d2e505047726f7570000000000200000000010000000002010000001c766572696669636174756d2e61726974686d2e4d6f645047726f75700000000004010000008101d9f27f10e6a62b003160daea5bed498c3dc4fcbf5d4badf230ec7937cf171dc024acfee3a0064f8627319092868724b3afdd0127eafc2187f251da5d0ce61e1ed31fd33afa2edc53174fc19c3c08cc8672b85fc495003494ae78f108f050a5c1753a8a44f33f67e2a7f0b38613292550c84e7af73bb8e7575de384594a85f97b010000008100ecf93f887353158018b06d752df6a4c61ee27e5faea5d6f918763c9be78b8ee012567f71d00327c31398c84943439259d7ee8093f57e10c3f928ed2e86730f0f698fe99d7d176e298ba7e0ce1e046643395c2fe24a801a4a573c7884782852e0ba9d4522799fb3f153f859c3099492a864273d7b9ddc73abaef1c22ca542fcbd010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b2745101000000040000000100000000020100000004000000000100000004000000000000000002010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b274510100000081001309b55b9599670d198118dfefc956161fa298ceae2ef64735082e5c52c1d3bb67969096a972550671a6ed3e950fa67a23562b4c0b0bddfe316191af88ea9843179fe0ce2c079d3151ebdc90c6e132edf099e49c73f2cacf72a730f8b849a0d24fac3d3eb86d819ea45c6919141966a07f709add6cc2a09e919a8d3585438009' />
         
           <ul class='options'>
             <li>
@@ -215,6 +219,7 @@
         </li>
         <li>
           <span class='title'>Separaci&oacute;n de poderes</span>
+          <input type='hidden' id='p1_pk' value='00000000020000000002010000001a766572696669636174756d2e61726974686d2e505047726f7570000000000200000000010000000002010000001c766572696669636174756d2e61726974686d2e4d6f645047726f75700000000004010000008101d9f27f10e6a62b003160daea5bed498c3dc4fcbf5d4badf230ec7937cf171dc024acfee3a0064f8627319092868724b3afdd0127eafc2187f251da5d0ce61e1ed31fd33afa2edc53174fc19c3c08cc8672b85fc495003494ae78f108f050a5c1753a8a44f33f67e2a7f0b38613292550c84e7af73bb8e7575de384594a85f97b010000008100ecf93f887353158018b06d752df6a4c61ee27e5faea5d6f918763c9be78b8ee012567f71d00327c31398c84943439259d7ee8093f57e10c3f928ed2e86730f0f698fe99d7d176e298ba7e0ce1e046643395c2fe24a801a4a573c7884782852e0ba9d4522799fb3f153f859c3099492a864273d7b9ddc73abaef1c22ca542fcbd010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b2745101000000040000000100000000020100000004000000000100000004000000000000000002010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b274510100000081001309b55b9599670d198118dfefc956161fa298ceae2ef64735082e5c52c1d3bb67969096a972550671a6ed3e950fa67a23562b4c0b0bddfe316191af88ea9843179fe0ce2c079d3151ebdc90c6e132edf099e49c73f2cacf72a730f8b849a0d24fac3d3eb86d819ea45c6919141966a07f709add6cc2a09e919a8d3585438009' />
         
           <ul class='options'>
             <li>
@@ -233,6 +238,7 @@
         </li>
         <li>
           <span class='title'>Una democracia m&aacute;s participativa</span>
+          <input type='hidden' id='p1_pk' value='00000000020000000002010000001a766572696669636174756d2e61726974686d2e505047726f7570000000000200000000010000000002010000001c766572696669636174756d2e61726974686d2e4d6f645047726f75700000000004010000008101d9f27f10e6a62b003160daea5bed498c3dc4fcbf5d4badf230ec7937cf171dc024acfee3a0064f8627319092868724b3afdd0127eafc2187f251da5d0ce61e1ed31fd33afa2edc53174fc19c3c08cc8672b85fc495003494ae78f108f050a5c1753a8a44f33f67e2a7f0b38613292550c84e7af73bb8e7575de384594a85f97b010000008100ecf93f887353158018b06d752df6a4c61ee27e5faea5d6f918763c9be78b8ee012567f71d00327c31398c84943439259d7ee8093f57e10c3f928ed2e86730f0f698fe99d7d176e298ba7e0ce1e046643395c2fe24a801a4a573c7884782852e0ba9d4522799fb3f153f859c3099492a864273d7b9ddc73abaef1c22ca542fcbd010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b2745101000000040000000100000000020100000004000000000100000004000000000000000002010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b274510100000081001309b55b9599670d198118dfefc956161fa298ceae2ef64735082e5c52c1d3bb67969096a972550671a6ed3e950fa67a23562b4c0b0bddfe316191af88ea9843179fe0ce2c079d3151ebdc90c6e132edf099e49c73f2cacf72a730f8b849a0d24fac3d3eb86d819ea45c6919141966a07f709add6cc2a09e919a8d3585438009' />
 
           <ul class='options'>
             <li>
@@ -251,6 +257,7 @@
         </li>
         <li>
           <span class='title'>Econom&iacute;a responsable</span>
+          <input type='hidden' id='p1_pk' value='00000000020000000002010000001a766572696669636174756d2e61726974686d2e505047726f7570000000000200000000010000000002010000001c766572696669636174756d2e61726974686d2e4d6f645047726f75700000000004010000008101d9f27f10e6a62b003160daea5bed498c3dc4fcbf5d4badf230ec7937cf171dc024acfee3a0064f8627319092868724b3afdd0127eafc2187f251da5d0ce61e1ed31fd33afa2edc53174fc19c3c08cc8672b85fc495003494ae78f108f050a5c1753a8a44f33f67e2a7f0b38613292550c84e7af73bb8e7575de384594a85f97b010000008100ecf93f887353158018b06d752df6a4c61ee27e5faea5d6f918763c9be78b8ee012567f71d00327c31398c84943439259d7ee8093f57e10c3f928ed2e86730f0f698fe99d7d176e298ba7e0ce1e046643395c2fe24a801a4a573c7884782852e0ba9d4522799fb3f153f859c3099492a864273d7b9ddc73abaef1c22ca542fcbd010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b2745101000000040000000100000000020100000004000000000100000004000000000000000002010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b274510100000081001309b55b9599670d198118dfefc956161fa298ceae2ef64735082e5c52c1d3bb67969096a972550671a6ed3e950fa67a23562b4c0b0bddfe316191af88ea9843179fe0ce2c079d3151ebdc90c6e132edf099e49c73f2cacf72a730f8b849a0d24fac3d3eb86d819ea45c6919141966a07f709add6cc2a09e919a8d3585438009' />
         
           <ul class='options'>
             <li>
