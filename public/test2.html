@@ -8,15 +8,16 @@
     
     <script type="text/javascript" charset="utf-8">
         var timeout;
+        var lastStatus = 'NONE';
         var restartApplet = false;
         var appletLoadedOnce = false;
-        var appletCode = '<applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="200" height="100"></applet>';
+        var appletCode = '<applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="0" height="0"></applet>';
 
         // This are some checks that are doing at startup
         if (!navigator.javaEnabled()) {
-            $('#applet_info').html("ERROR: JAVA IS DISABLED");
+            setStatus("JAVA_DISABLED", "ERROR", ""); 
         } else if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
-            $('#applet_info').html("ERROR: NOT USING FIREFOX");
+            setStatus("NOT_USING_FIREFOX", "ERROR", "Unfortunately, only Mozilla Firefox is currently supported");
         } else {
             timeout = setTimeout("checkStatus()", 1000);
         }
@@ -30,21 +31,22 @@
                 applet.getAppletInfo();
                 if (!appletLoadedOnce) {
                     appletLoadedOnce = true;
+                    setStatus("APPLET_LOAD", "first time applet is loaded", "version info = " + applet.getAppletInfo());
                 }
             } catch (error) {
-                console.log("error..")
                 // It might be still loading
                 if (restartApplet) {
-                    $('#applet_info').html("RE-Loading java applet, please wait..");
+                    setStatus("RELOADING_JAVA_APPLET", "please wait...", "");
                     $('#java_applet_wrapper').html(appletCode);
                     restartApplet = false;
                     appletLoadedOnce = false;
                 } else {
                     if (!appletLoadedOnce) {
-                        $('#applet_info').html("Loading java applet, please wait..");
+                        setStatus("LOADING_JAVA_APPLET", "please wait...", "");
                     } else {
                         // Applet crashed/closed!
-                        $('#applet_info').html("ERROR: JAVA APPLET CRASHED");
+
+                        setStatus("JAVA_APPLET_CRASHED", "ERROR", "");
                     }
                 }
             }
@@ -71,53 +73,87 @@
 
             if (className == "java.security.ProviderException"
                 && description == "Initialization failed") {
-                $('#applet_info').html("NO CARD READER " + className + ": " + description);
+                setStatus(className, description, "NO CARD READER");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.KeyStoreException" &&
                 description == "PKCS11 not found") {
                 // No card inside the card reader
-                $('#applet_info').html("NO CARD " + className + ": " + description);
+                setStatus(className, description, "NO CARD");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.ProviderException" &&
                 description == "sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR") {
-                $('#applet_info').html("USER DID NOT WANT TO SIGN " + className + ": " + description);
+                setStatus(className, description, "USER DID NOT WANT TO SIGN");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$PinCancelledByUser") {
-                $('#applet_info').html("USER CANCELLED TO WRITE PIN" + className + ": " + description);
+                setStatus(className, description, "ERROR IN THE SERVER SIDE");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$BallotCastingError") {
-                $('#applet_info').html("ERROR IN THE SERVER SIDE" + className + ": " + description);
+                setStatus(className, description, "ERROR IN THE SERVER SIDE");
 
             } else if (className == "org.agora.VotingApplet$SignatureCertificateNotFoundError") {
-                $('#applet_info').html("CERTIFICATE FOR THE SIGNATURE NOT FOUND" + className + ": " + description);
+                setStatus(className, description, "");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$CertificateWithoutPrivateKeyError") {
-                $('#applet_info').html("CERTIFICATE WITHOUT PRIVATE KEY" + className + ": " + description);
+                setStatus(className, description, "");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.InvalidKeyException" &&
                 description.startsWith("No installed provider supports this key:")) {
-                $('#applet_info').html("INVALID KEY REMOVE DNIE AND INSERT AGAIN " + className + ": " + description);
+                setStatus(className, description, "INVALID KEY REMOVE DNIE AND INSERT AGAIN");
+                timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$InitTimeoutError") {
-                $('#applet_info').html("INIT TIMEOUT, REMOVE DNIE AND INSERT AGAIN " + className + ": " + description);
+                setStatus(className, description, "INIT TIMEOUT, REMOVE DNIE AND INSERT AGAIN");
 
-            } else if (className == "org.agora.VotingApplet$VoteTimeoutError") {
-                $('#applet_info').html("VOTE TIMEOUT " + className + ": " + description);
+            } else if (className == "org.agora.VotingApplet$PinTimeoutError") {
+                setStatus(className, description, "VOTE TIMEOUT");
+                timeout = setTimeout("triggerAppletRestart()", 1);
+
+            } else if (className == "org.agora.VotingApplet$UserInputTimeoutError") {
+                setStatus(className, description, "VOTE TIMEOUT");
+                timeout = setTimeout("triggerAppletRestart()", 1);
+
+            } else if (className == "org.agora.VotingApplet$LoadCardDataTimeoutError") {
+                setStatus(className, description, "VOTE TIMEOUT");
+                timeout = setTimeout("triggerAppletRestart()", 1);
+
+            } else if (className == "org.agora.VotingApplet$SignatureTimeoutError") {
+                setStatus(className, description, "VOTE TIMEOUT");
+                timeout = setTimeout("triggerAppletRestart()", 1);
+
+            } else if (className == "org.agora.VotingApplet$SendBallotsTimeoutError") {
+                setStatus(className, description, "VOTE TIMEOUT");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else {
-                $('#applet_info').html("Unknown error " + className + ": " + description);
+                setStatus(className, description, "Unknown error");
             }
         }
         function async_update(code, description) {
-            $('#applet_info').html(code + ": " + description);
+            setStatus(code, description, '');
         }
+
+        function setStatus(code, message, customMessage) {
+            lastStatusCode = code;
+            var html = getCurrentTimeString() + " | " + code + ": " + message + "; "  + customMessage;
+            $('#applet_info').html(html);
+            $('#applet_log').html($('#applet_log').html() + html + "<br/>");
+        }
+
+        function getCurrentTimeString() {
+            var currentTime = new Date()
+            var milliseconds = currentTime.getTime() % 1000;
+            var seconds = currentTime.getSeconds();
+            var minutes = currentTime.getMinutes();
+            var hours = currentTime.getHours();
+            return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+        }
+
       $(function(){
 
         $('form').submit(function(e) {
@@ -160,8 +196,8 @@
       }
       
       applet {
-        width: 200px;
-        height: 50px;
+        width: 0px;
+        height: 5px;
         float: left;
       }
       
@@ -175,7 +211,7 @@
   <body>
     <h1>Refer&eacute;ndum 15 Oct</h1>
     <div id="java_applet_wrapper">
-        <applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="200" height="100"></applet>
+        <applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="0" height="0"></applet>
     </div>
     <form>
       <ol>
@@ -281,8 +317,12 @@
       <pre id='params'>
       </pre>
 
-      <div style="border: 1px red; width: 500px; height: 100px" id="applet_info">
-      aaaaaaaaaaaa
+      <div style="border: 1px red; width: 100%; height: 50px" id="applet_info">
+      ...
+      </div>
+
+      <div style="border: solid 1px red; width: 100%; height: 250px; overflow:scroll;" id="applet_log">
+      ...
       </div>
     
     </form>
