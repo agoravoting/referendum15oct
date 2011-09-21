@@ -7,17 +7,579 @@
     <script src="javascripts/json2.js"></script>
     
     <script type="text/javascript" charset="utf-8">
+        /*
+        The voting page works like a state machine. It has a default a state,
+        and when it receives different events, it is processed in a different
+        way depending on the current state. This processing can (but not always
+        does) include an state change. A state always comes with a section of the
+        voting page that will be shown.
+
+        #### Sections:
+
+        1. INSERT_CARD
+
+        The default section. Lets the user know that he should proceed by
+        inserting his electronic identity card.
+
+        2. ERROR
+
+        Shows some kind of error, with a title, description, some help content,
+        and means to report the problem.
+
+        3. CHOOSE
+
+        The user is allowed to choose what to vote. This might include different
+        screens (for example one screen per propossal, then another screen for
+        review etc).
+
+        4. WAIT
+
+        The user must wait for a process to finish. This section has a title,
+        and a description. For example, this is the section is shown when the
+        user sends the vote and it's being processed.
+
+        5. SUCCESS
+
+        Shown when the user has finished successfully the voting process.
+
+        6. INFO
+
+        Shown when there is some kind of information that needs to be shown to
+        the user.
+
+        #### States:
+
+        1. INIT
+
+        The default state. It doesn't know anything about the configuration of
+        the browser or the card reader or if the card is inserted. It shows the
+        default section (INSERT_CARD).
+
+        2. UNRECOVERABLE_ERROR
+
+        Shows the ERROR section. It happens when for example when the events
+        JAVA_DISABLED or NOT_USING_FIREFOX come in. There's nothing the user can
+        do other than reloading the page when the error has been taken care of
+        (by either enabling/installing java or changing to another browser in
+        the example).
+
+        3. INSERT_CARD
+
+        Opendnie has been detected, Java version is Ok, user is using Firefox,
+        Java applet was correctly loaded, the card or the card reader have not
+        been detected yet. This shows the INSERT_CARD section.
+
+        It gives access to some help explaining why the card/card reader might
+        have not been detect and what to do in that case.
+
+        4. INSERT_CARD_AGAIN
+
+        Shows the ERROR section and explains to the user that there was a
+        problem reading the card and that the easiest solution is usually to
+        just unplug and replug the card.
+        If the user was in CHOOSE state or in VOTING state, it explains to the
+        user that his ballot have not been recorded yet.
+        
+        6. CHOOSE
+
+        The card is ready to be used, and thus the user can choose his
+        preferences for the propossals. After that, a confirmation screen is
+        shown. Thus, shows the CHOOSE section.
+
+        7. PROCESSING_VOTE
+
+        Shown when the user needs to wait because his vote is being processed,
+        for example when the user clicks "Vote". Shows the WAIT section.
+
+        10. VOTING_CANCELLED
+
+        Shows the INFO section. Informs to the user that the voting process was
+        cancelled because he wanted (for example by not accepting to sign the
+        vote).
+
+        11. UNRECOVERABLE_VOTING_ERROR
+
+        Shows the ERROR section. Happens if there was for example a timeout
+        when sending the vote, or an error in the server side.
+
+        12. SUCCESS
+
+        Shows the INFO section. Happens when the vote was correctly casted. It
+        allows the user to download the signed vote and the receipt of the vote.
+
+        #### Events
+
+        Error codes:
+
+        * NOT_USING_FIREFOX
+        * JAVA_DISABLED
+        * JAVA_APPLET_CRASHED
+        * UNKNOWN_ERROR
+        * org.agora.VotingApplet$IncompatibleJavaVersion
+        * java.security.ProviderException|Initialization failed
+        * java.security.KeyStoreException
+        * java.security.ProviderException|sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR
+        * org.agora.VotingApplet$PinCancelledByUser
+        * org.agora.VotingApplet$BallotCastingError
+        * org.agora.VotingApplet$SignatureCertificateNotFoundError
+        * org.agora.VotingApplet$SignatureCertificateNotFoundError
+        * org.agora.VotingApplet$CertificateWithoutPrivateKeyError
+        * java.security.InvalidKeyException
+        * org.agora.VotingApplet$InitTimeoutError
+        * org.agora.VotingApplet$PinTimeoutError
+        * org.agora.VotingApplet$UserInputTimeoutError
+        * org.agora.VotingApplet$LoadCardDataTimeoutError
+        * org.agora.VotingApplet$SignatureTimeoutError
+        * org.agora.VotingApplet$SignatureTimeoutError
+        * org.agora.VotingApplet$SendBallotsTimeoutError
+
+        Info codes:
+
+        * APPLET_LOAD
+        * RELOADING_JAVA_APPLET
+        * LOADING_JAVA_APPLET
+        * DEBUG_INFO
+        * INITIALIZED
+        * CARD_INSIDE_READER
+        * CARD_FOUND
+        * INIT_DNI
+        * FORGING_BALLOTS
+        * SENDING_BALLOTS
+        * VOTING
+        * SUCCESS
+        
+        */
+
+        var stateTransitions = [
+            {
+                'initial_states': ["INIT"],
+                'events': ["NOT_USING_FIREFOX"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Unsupported web browser",
+                        'description': "You are using a web Browser that is not supported. Unfortunately, currently only Mozilla Firefox is supported. If you have it installed already in your computer, try to load the web page on it, or install Firefox if you don't have it installed yet. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Web_Browsers#Not using Firefox\">here for instructions on how to install Mozilla Firefox</a>."
+                    }
+                }
+            },
+            {
+                'initial_states': ["INIT"],
+                'events': ["JAVA_DISABLED"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Java support is not active",
+                        'description': "You don't have Java support enabled in your web browser but it's needed for Agora Ciudadana to work. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Java#Install_and_Configure_Java\">here for instructions on how to install and configure Java in your web browser</a>."
+                    }
+                }
+            },
+            {
+                'initial_states': ["INIT"],
+                'events': ["org.agora.VotingApplet$IncompatibleJavaVersion"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Incompatible Java version",
+                        'description': "You have Java support enabled in your web browser but another version is needed for Agora Ciudadana to work. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Java#Install_and_Configure_Java\">here for instructions on how to install and configure Java in your web browser</a>."
+                    }
+                }
+            },
+            {
+                'initial_states': ["INIT", "INSERT_CARD", "INSERT_CARD_AGAIN", "CHOOSE"],
+                'events': ["JAVA_APPLET_CRASHED"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Java applet crashed",
+                        'description': "The Java applet used in this page crashed (or you killed it) before you tried to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                    }
+                }
+            },
+            {
+                'initial_states': ["INIT", "INSERT_CARD", "INSERT_CARD_AGAIN", "CHOOSE"],
+                'events': ["UNKNOWN_ERROR"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Unknown error",
+                        'description': "An unknown error occurred before you tried to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</>."
+                    }
+                }
+            },
+            {
+                'initial_states': ["INIT", "INSERT_CARD_AGAIN",
+                    "VOTING_CANCELLED", "UNRECOVERABLE_VOTING_ERROR", "SUCCESS"],
+                'events': ["java.security.ProviderException|Initialization failed"],
+                'next_state': {
+                    'state_id': "INSERT_CARD",
+                    'section_id': "INSERT_CARD",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'card_reader_connected': false
+                    }
+                }
+            },
+            {
+                'initial_states': ["INIT", "INSERT_CARD_AGAIN",
+                    "VOTING_CANCELLED", "UNRECOVERABLE_VOTING_ERROR", "SUCCESS"],
+                'events': ["java.security.KeyStoreException"],
+                'next_state': {
+                    'state_id': "INSERT_CARD",
+                    'section_id': "INSERT_CARD",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'card_reader_connected': true
+                    }
+                }
+            },
+            {
+                'initial_states': ["INIT", "INSERT_CARD", "CHOOSE",
+                    "VOTING_CANCELLED", "UNRECOVERABLE_VOTING_ERROR", "SUCCESS"],
+                'events': ["org.agora.VotingApplet$InitTimeoutError"],
+                'next_state': {
+                    'state_id': "INSERT_CARD_AGAIN",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Error reading the card",
+                        'description': "A problem ocurred while reading the card and that the easiest solution is usually to         just unplug and replug your DNIe into the card reader. If this doesn't work, try doing the same with the card reader, or restarting the web browser. If the problem persist, please <a href=\"#report_problem\">report it to us</a>."
+                    }
+                }
+            },
+            {
+                'initial_states': ["INIT", "INSERT_CARD", "INSERT_CARD_AGAIN"],
+                'events': ["CARD_INSIDE_READER"],
+                'next_state': {
+                    'state_id': "CHOOSE",
+                    'section_id': "CHOOSE",
+                    'section_data': null
+                }
+            },
+            {
+                'initial_states': ["CHOOSE"],
+                'events': ["java.security.ProviderException|Initialization failed"],
+                'next_state': {
+                    'state_id': "INSERT_CARD_AGAIN",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Error reading the card",
+                        'description': "You disconnected the card reader before sending your vote. Insert the card reader to start again the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["CHOOSE"],
+                'events': ["java.security.KeyStoreException"],
+                'next_state': {
+                    'state_id': "INSERT_CARD_AGAIN",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Error reading the card",
+                        'description': "You disconnected your DNIe from your card reader before sending your vote. Insert your DNIe into the card reader to start again the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["CHOOSE"],
+                'events': ["VOTING"],
+                'next_state': {
+                    'state_id': "PROCESSING_VOTE",
+                    'section_id': "WAIT",
+                    'section_data': {
+                        'title': "Vote being processed",
+                        'description': "Please wait..."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["JAVA_APPLET_CRASHED"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Java applet crashed",
+                        'description': "The Java applet used in this page crashed (or you killed it) while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["UNKNOWN_ERROR"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Unknown error",
+                        'description': "An unknown error occurred while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</>."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["java.security.ProviderException|Initialization failed"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Card removed",
+                        'description': "The card reader was disconnected from the computer while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader to restart the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["java.security.KeyStoreException"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Card removed",
+                        'description': "You DNIe was disconnected from the card reader while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader to restart the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["org.agora.VotingApplet$InitTimeoutError"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Error reading the card",
+                        'description': "A problem ocurred while reading the card while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. try to extract and reinsert your DNIe in the card reader to restart the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["java.security.ProviderException|sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR"],
+                'next_state': {
+                    'state_id': "VOTING_CANCELLED",
+                    'section_id': "INFO",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Voting cancelled",
+                        'description': "You cancelled the voting process by denying to sign the vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["org.agora.VotingApplet$PinCancelledByUser"],
+                'next_state': {
+                    'state_id': "VOTING_CANCELLED",
+                    'section_id': "INFO",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Voting cancelled",
+                        'description': "You cancelled the voting process by denying to enter your DNIe PIN and your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["org.agora.VotingApplet$SendBallotsTimeoutError"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Error when sending the ballot to the server",
+                        'description': "A problem ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. This could be triggered to a slow or bad Internet connection. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["org.agora.VotingApplet$BallotCastingError"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Error when casting the ballot",
+                        'description': "A problem ocurred while casting the ballots and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': [
+                    "org.agora.VotingApplet$SignatureCertificateNotFoundError",
+                    "org.agora.VotingApplet$CertificateWithoutPrivateKeyError",
+                    "org.agora.VotingApplet$LoadCardDataTimeoutError",
+                    "org.agora.VotingApplet$SignatureTimeoutError"
+                ],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Error when sending the ballot to the server",
+                        'description': "A problem with your card or card reader ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': [
+                    "org.agora.VotingApplet$PinTimeoutError",
+                    "org.agora.VotingApplet$UserInputTimeoutError"
+                ],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                        'title': "Error: user interaction timeout",
+                        'description': "It took you too much to respond while sending your vote to the Ágora Ciudadana servers and for your own security, it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["INIT_DNI"],
+                'next_state': {
+                    'state_id': "PROCESSING_VOTE",
+                    'section_id': "WAIT",
+                    'section_data': {
+                        'title': "Vote being processed",
+                        'description': "Loading the DNIe certificate.."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["FORGING_BALLOTS"],
+                'next_state': {
+                    'state_id': "PROCESSING_VOTE",
+                    'section_id': "WAIT",
+                    'section_data': {
+                        'title': "Vote being processed",
+                        'description': "Creating and signing the ballots.."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["SENDING_BALLOTS"],
+                'next_state': {
+                    'state_id': "PROCESSING_VOTE",
+                    'section_id': "WAIT",
+                    'section_data': {
+                        'title': "Vote being processed",
+                        'description': "Sending the ballots to the server.."
+                    }
+                }
+            },
+            {
+                'initial_states': ["PROCESSING_VOTE"],
+                'events': ["SUCCESS"],
+                'next_state': {
+                    'state_id': "SUCCESS",
+                    'section_id': "SUCCESS",
+                    'section_data': {
+                        'trigger_applet_restart': true,
+                    }
+                }
+            },
+            {
+                'initial_states': ["VOTING_CANCELLED"],
+                'events': ["JAVA_APPLET_CRASHED"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Java applet crashed",
+                        'description': "The Java applet used in this page crashed (or you killed it) after you cancelled to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                    }
+                }
+            },
+            {
+                'initial_states': ["VOTING_CANCELLED"],
+                'events': ["UNKNOWN_ERROR"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Unknown error",
+                        'description': "An unknown error occurred after you cancelled to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</>."
+                    }
+                }
+            },
+            {
+                'initial_states': ["UNRECOVERABLE_VOTING_ERROR"],
+                'events': ["JAVA_APPLET_CRASHED"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Java applet crashed",
+                        'description': "The Java applet used in this page crashed (or you killed it) after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                    }
+                }
+            },
+            {
+                'initial_states': ["VOTING_CANCELLED"],
+                'events': ["UNKNOWN_ERROR"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Unknown error",
+                        'description': "An unknown error occurred  after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#report_problem\">report us the problem by clicking here</>."
+                    }
+                }
+            },
+            {
+                'initial_states': ["SUCCESS"],
+                'events': ["JAVA_APPLET_CRASHED"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Java applet crashed",
+                        'description': "The Java applet used in this page crashed (or you killed it) after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                    }
+                }
+            },
+            {
+                'initial_states': ["SUCCESS"],
+                'events': ["UNKNOWN_ERROR"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "Unknown error",
+                        'description': "An unknown error occurred after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#report_problem\">report us the problem by clicking here</>."
+                    }
+                }
+            },
+        ];
+        
         var timeout;
-        var lastStatus = 'NONE';
+        var lastStatus = "NONE";
         var restartApplet = false;
         var appletLoadedOnce = false;
         var appletCode = '<applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="0" height="0"></applet>';
 
-        // This are some checks that are doing at startup
-        if (!navigator.javaEnabled()) {
-            setStatus("JAVA_DISABLED", "ERROR", ""); 
-        } else if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
-            setStatus("NOT_USING_FIREFOX", "ERROR", "Unfortunately, only Mozilla Firefox is currently supported");
+        // This are some checks that are done at startup
+        if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
+            pushEvent("NOT_USING_FIREFOX", "ERROR", "Unfortunately, only Mozilla Firefox is currently supported");
+        } else if (!navigator.javaEnabled()) {
+            pushEvent("JAVA_DISABLED", "ERROR", "");
         } else {
             timeout = setTimeout("checkStatus()", 1000);
         }
@@ -31,22 +593,22 @@
                 applet.getAppletInfo();
                 if (!appletLoadedOnce) {
                     appletLoadedOnce = true;
-                    setStatus("APPLET_LOAD", "first time applet is loaded", "version info = " + applet.getAppletInfo());
+                    pushEvent("APPLET_LOAD", "first time applet is loaded", "version info = " + applet.getAppletInfo());
                 }
             } catch (error) {
                 // It might be still loading
                 if (restartApplet) {
-                    setStatus("RELOADING_JAVA_APPLET", "please wait...", "");
+                    pushEvent("RELOADING_JAVA_APPLET", "please wait...", "");
                     $('#java_applet_wrapper').html(appletCode);
                     restartApplet = false;
                     appletLoadedOnce = false;
                 } else {
                     if (!appletLoadedOnce) {
-                        setStatus("LOADING_JAVA_APPLET", "please wait...", "");
+                        pushEvent("LOADING_JAVA_APPLET", "please wait...", "");
                     } else {
                         // Applet crashed/closed!
 
-                        setStatus("JAVA_APPLET_CRASHED", "ERROR", "");
+                        pushEvent("JAVA_APPLET_CRASHED", "ERROR", "");
                     }
                 }
             }
@@ -71,80 +633,97 @@
             // directly; that's why instead of doing a direct call to
             // triggerAppletRestart(); we use setTimeout.
 
-            if (className == "java.security.ProviderException"
+            if (className == "org.agora.VotingApplet$IncompatibleJavaVersion") {
+                pushEvent(className, description, "");
+
+            } else if (className == "java.security.ProviderException"
                 && description == "Initialization failed") {
-                setStatus(className, description, "NO CARD READER");
+                pushEvent(className + "|" + description, "", "NO CARD READER");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.KeyStoreException" &&
                 description == "PKCS11 not found") {
                 // No card inside the card reader
-                setStatus(className, description, "NO CARD");
+                pushEvent(className, description, "NO CARD");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "java.security.ProviderException" &&
                 description == "sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR") {
-                setStatus(className, description, "USER DID NOT WANT TO SIGN");
+                pushEvent(className + "|" + description, "", "USER DID NOT WANT TO SIGN");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$PinCancelledByUser") {
-                setStatus(className, description, "ERROR IN THE SERVER SIDE");
+                pushEvent(className, description, "");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$BallotCastingError") {
-                setStatus(className, description, "ERROR IN THE SERVER SIDE");
+                pushEvent(className, description, "ERROR IN THE SERVER SIDE");
 
             } else if (className == "org.agora.VotingApplet$SignatureCertificateNotFoundError") {
-                setStatus(className, description, "");
+                pushEvent(className, description, "");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$CertificateWithoutPrivateKeyError") {
-                setStatus(className, description, "");
+                pushEvent(className, description, "");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
-            } else if (className == "java.security.InvalidKeyException" &&
-                description.startsWith("No installed provider supports this key:")) {
-                setStatus(className, description, "INVALID KEY REMOVE DNIE AND INSERT AGAIN");
+            } else if (className == "java.security.InvalidKeyException") {
+                pushEvent(className, description, "INVALID KEY REMOVE DNIE AND INSERT AGAIN");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$InitTimeoutError") {
-                setStatus(className, description, "INIT TIMEOUT, REMOVE DNIE AND INSERT AGAIN");
+                pushEvent(className, description, "INIT TIMEOUT, REMOVE DNIE AND INSERT AGAIN");
 
             } else if (className == "org.agora.VotingApplet$PinTimeoutError") {
-                setStatus(className, description, "VOTE TIMEOUT");
+                pushEvent(className, description, "VOTE TIMEOUT");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$UserInputTimeoutError") {
-                setStatus(className, description, "VOTE TIMEOUT");
+                pushEvent(className, description, "VOTE TIMEOUT");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$LoadCardDataTimeoutError") {
-                setStatus(className, description, "VOTE TIMEOUT");
+                pushEvent(className, description, "VOTE TIMEOUT");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$SignatureTimeoutError") {
-                setStatus(className, description, "VOTE TIMEOUT");
+                pushEvent(className, description, "VOTE TIMEOUT");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else if (className == "org.agora.VotingApplet$SendBallotsTimeoutError") {
-                setStatus(className, description, "VOTE TIMEOUT");
+                pushEvent(className, description, "VOTE TIMEOUT");
                 timeout = setTimeout("triggerAppletRestart()", 1);
 
             } else {
-                setStatus(className, description, "Unknown error");
+                pushEvent("UNKNOWN_ERROR", description, className);
             }
         }
+
+        /**
+         * Callback function called by the applet to send updates.
+         * @note to send errors, the applet calls to @ref async_exception
+         */
         function async_update(code, description) {
-            setStatus(code, description, '');
+            pushEvent(code, description, '');
         }
 
-        function setStatus(code, message, customMessage) {
+        /**
+         * @short Push a new event onto the state machine.
+         * 
+         * The event is processed, a state transition might be triggered and
+         * the event is also logged.
+         */
+        function pushEvent(code, message, customMessage) {
             lastStatusCode = code;
             var html = getCurrentTimeString() + " | " + code + ": " + message + "; "  + customMessage;
             $('#applet_info').html(html);
             $('#applet_log').html($('#applet_log').html() + html + "<br/>");
         }
 
+        /**
+         * @returns a string containing the current time.
+         * Used for logging purposes.
+         */
         function getCurrentTimeString() {
             var currentTime = new Date()
             var milliseconds = currentTime.getTime() % 1000;
@@ -154,8 +733,14 @@
             return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
         }
 
+      /**
+       * JQuery code
+       */
       $(function(){
 
+        /**
+         * Processes the vote when the user triggers the "Send Vote" button.
+         */
         $('form').submit(function(e) {
             var applet = $('#java_applet').get(0);
             e.preventDefault();
@@ -168,7 +753,6 @@
                 ballotArray[ballotArray.length] = proposal;
                 ballotArray[ballotArray.length] = publicKey;
             });
-            console.log("ballot = " + ballotArray.join(','));
             applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain + ":" + location.port);
             return false;
         });
