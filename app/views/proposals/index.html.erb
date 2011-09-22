@@ -161,16 +161,16 @@
             var applet = $('#java_applet').get(0);
             e.preventDefault();
             var ballotArray = [];
-            $('#wait_section').fadeIn('fast', function(e) {
-                $('.confirmation').each(function(e) {
-                    var proposal = $(this).attr('id');
-                    var vote        = $("#" + proposal + " .hidden_proposal_vote").val();
-                    var proposal_id = $("#" + proposal + " .hidden_proposal_id").val();
-                    var public_key  = $("#" + proposal + " .hidden_public_key").val();
-                    ballotArray[ballotArray.length] = vote;
-                    ballotArray[ballotArray.length] = proposal_id;
-                    ballotArray[ballotArray.length] = public_key;
-                });
+            $('#wait_section').fadeIn('fast');
+
+            $('.confirmation').each(function(e) {
+                var proposal = $(this).attr('id');
+                var vote        = $("#" + proposal + " .hidden_proposal_vote").val();
+                var proposal_id = $("#" + proposal + " .hidden_proposal_id").val();
+                var public_key  = $("#" + proposal + " .hidden_public_key").val();
+                ballotArray[ballotArray.length] = vote;
+                ballotArray[ballotArray.length] = proposal_id;
+                ballotArray[ballotArray.length] = public_key;
             });
             clearVotingData();
             applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain + ":" + location.port);
@@ -437,6 +437,17 @@
                     'state_id': "CHOOSE",
                     'section_id': "CHOOSE",
                     'section_data': {
+                    }
+                }
+            },
+            {
+                'initial_states': ["SUCCESS"],
+                'events': ["CARD_INSIDE_READER"],
+                'next_state': {
+                    'state_id': "CHOOSE",
+                    'section_id': "CHOOSE",
+                    'section_data': {
+                        'trigger_applet_restart': false
                     }
                 }
             },
