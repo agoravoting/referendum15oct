@@ -97,6 +97,13 @@
       });
     });
 
+    // When the user clicks in a link to report a problem, let it send the
+    // applet_log to the developers. At the moment, this just shows the applet_log
+    // TODO
+    $(".report_problem").click(function () {
+        $("#applet_log").show();
+    });
+
     // Connect the confirmation buttons to the proposals
     <% @proposals.each_with_index do |proposal, index| %>
         $("#confirmation_proposal_<%= index + 1 %> .change_vote").click(function () {
@@ -169,8 +176,7 @@
             applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain + ":" + location.port);
             return false;
         });
-  
-  });
+    });
 
   /*
         The voting page works like a state machine. It has a default a state,
@@ -366,7 +372,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) before you tried to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) before you tried to send your vote. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -378,7 +384,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Unknown error",
-                        'description': "An unknown error occurred before you tried to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. Try to reload the web page to restart the voting process."
+                        'description': "An unknown error occurred before you tried to send your vote. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. Try to reload the web page to restart the voting process."
                     }
                 }
             },
@@ -418,7 +424,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error reading the card",
-                        'description': "A problem ocurred while reading the card and that the easiest solution is usually to         just unplug and replug your DNIe into the card reader. If this doesn't work, try doing the same with the card reader, or restarting the web browser. If the problem persist, please <a href=\"#report_problem\">report it to us</a>."
+                        'description': "A problem ocurred while reading the card and that the easiest solution is usually to         just unplug and replug your DNIe into the card reader. If this doesn't work, try doing the same with the card reader, or restarting the web browser. If the problem persist, please <a href=\"#\" class= \"report_problem\">report it to us</a>."
                     }
                 }
             },
@@ -479,7 +485,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -492,7 +498,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Unknown error",
-                        'description': "An unknown error occurred while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>.  Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "An unknown error occurred while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>.  Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -505,7 +511,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Card removed",
-                        'description': "The card reader was disconnected from the computer while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to reconnect your card reader with your DNIe inserted on it to restart the voting process."
+                        'description': "The card reader was disconnected from the computer while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to reconnect your card reader with your DNIe inserted on it to restart the voting process."
                     }
                 }
             },
@@ -518,7 +524,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Card removed",
-                        'description': "You DNIe was disconnected from the card reader while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to reinsert your DNIe in the card reader to restart the voting process."
+                        'description': "You DNIe was disconnected from the card reader while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to reinsert your DNIe in the card reader to restart the voting process."
                     }
                 }
             },
@@ -531,7 +537,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Invalid PIN",
-                        'description': "You wronte an invalid PIN for your DNIe, your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader to restart the voting process."
+                        'description': "You wronte an invalid PIN for your DNIe, your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader to restart the voting process."
                     }
                 }
             },
@@ -544,7 +550,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error reading the card",
-                        'description': "A problem ocurred while reading the card while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. try to extract and reinsert your DNIe in the card reader to restart the voting process."
+                        'description': "A problem ocurred while reading the card while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. try to extract and reinsert your DNIe in the card reader to restart the voting process."
                     }
                 }
             },
@@ -557,7 +563,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Voting cancelled",
-                        'description': "You cancelled the voting process by denying to sign the vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "You cancelled the voting process by denying to sign the vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -570,7 +576,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Voting cancelled",
-                        'description': "You cancelled the voting process by denying to enter your DNIe PIN and your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "You cancelled the voting process by denying to enter your DNIe PIN and your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -583,7 +589,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error when sending the ballot to the server",
-                        'description': "A problem ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. This could be triggered to a slow or bad Internet connection. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "A problem ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. This could be triggered to a slow or bad Internet connection. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -596,7 +602,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error when processing the PIN",
-                        'description': "A problem ocurred while processing the PIN of your DNIe cardand it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "A problem ocurred while processing the PIN of your DNIe cardand it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -609,7 +615,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error when casting the ballot",
-                        'description': "A problem ocurred while casting the ballots and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "A problem ocurred while casting the ballots and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -627,7 +633,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error when sending the ballot to the server",
-                        'description': "A problem with your card or card reader ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "A problem with your card or card reader ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -640,7 +646,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error: user interaction timeout",
-                        'description': "It took you too much to respond while sending your vote to the Ágora Ciudadana servers and for your own security, it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "It took you too much to respond while sending your vote to the Ágora Ciudadana servers and for your own security, it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -699,7 +705,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) after you cancelled to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) after you cancelled to send your vote. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -711,7 +717,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Unknown error",
-                        'description': "An unknown error occurred after you cancelled to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to restart the voting process."
+                        'description': "An unknown error occurred after you cancelled to send your vote. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to restart the voting process."
                     }
                 }
             },
@@ -723,7 +729,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -735,7 +741,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Unknown error",
-                        'description': "An unknown error occurred  after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to restart the voting process."
+                        'description': "An unknown error occurred  after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to restart the voting process."
                     }
                 }
             },
@@ -747,7 +753,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -759,7 +765,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Unknown error",
-                        'description': "An unknown error occurred after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to vote again."
+                        'description': "An unknown error occurred after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to vote again."
                     }
                 }
             },
