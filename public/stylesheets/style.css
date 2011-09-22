@@ -569,6 +569,7 @@ applet {
 
 #applet_log {
     border: solid 1px red;
+    clear: both;
     width: 100%;
     height: 250px;
     overflow:scroll;

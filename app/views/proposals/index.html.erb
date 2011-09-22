@@ -1,11 +1,7 @@
-<div id="java_applet_wrapper">
-    <applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="0" height="0">applet yeah</applet>
-</div>
-
 <div id="insert_card_section">
     <div id="insert_card_section_wrapper">
         <h2>Insert your DNIe<br /> for voting</h2>
-        <p>DNIe card reader not connected</p>
+        <p>Loading, please wait...</p>
     </div>
     <div id="insert_dnie_icon">
         <%= image_tag("dni_icon_insertar.png", :alt => "Icon of a DNIe being introduced into the card reader") %>
@@ -42,6 +38,29 @@
             <% end %>
         </ul>
     </div>
+    <div id="confirmation">
+        <ul>
+            <% @proposals.each_with_index do |proposal, index| %>
+            <li class="confirmation" id="confirmation_proposal_<%= index + 1 %>">
+                <h3>
+                <span class="number"><%= index + 1 %></span>
+                <span class="title"><%= proposal.name %></span>
+                <%= hidden_field_tag 'proposal_id', proposal.id, :class => "hidden_proposal_id" %>
+                <%= hidden_field_tag 'proposal_vote', '-1', :class => "hidden_proposal_vote" %>
+                <%= hidden_field_tag 'proposal_public_key', proposal.public_key, :class => "hidden_public_key" %>
+
+                </h3>
+                <span class="choice"></span>
+                <span class="change"><%= link_to "<< change", "#", :class => "change_vote", :name => "#{index + 1}"  %></span>
+            </li>
+            <% end %>
+        </ul>
+
+        <div id="send_button">
+        <%= link_to "Send vote", retrieve_dni_path %>
+        </div>
+    </div>
+
 </div>
 
 
@@ -61,39 +80,55 @@
     <% @proposals.each_with_index do |proposal, i| %>
       $("#proposal_<%= i + 1 %> .vote").click(function () {
         $("#proposal_<%= i + 1 %>").fadeOut("fast", function() {
-          $('#instructions h2').html("Proposal <%= i + 2 %> of <%= @proposals.length %>");
+          if (<%= i + 1 %> != <%= @proposals.length %>) {
+            $('#instructions h2').html("Proposal <%= i + 2 %> of <%= @proposals.length %>");
+          }
           $("#proposal_<%= i + 2 %>").fadeIn("fast");
         });
       });
     <% end %>
 
     // Connect the buttons of the last proposal to show the confirmation screen
-    $("#proposal_<%= @proposals.length %> .vote").click(function () {
-      $("#proposal_<%= @proposals.length %>").fadeOut("fast", function() {
-        $("#choose_section").hide();
+    $("#proposal_<%= @proposals.length  %> .vote").click(function () {
+      $("#proposal_<%= @proposals.length  %>").fadeOut("fast", function() {
+        $('#instructions h2').html("Confirmation");
+        $("#proposals_items").hide();
         $("#confirmation").fadeIn("fast");
       });
     });
 
-    // Connect the change_vote buttons
+    // Connect the confirmation buttons to the proposals
     <% @proposals.each_with_index do |proposal, index| %>
-        $("confirmation_proposal_<%= index + 1 %> .chage_vote").click(function () {
-            $("#proposal_<%= index + 1 %>").fadeOut("fast", function() {
+        $("#confirmation_proposal_<%= index + 1 %> .change_vote").click(function () {
+            $("#confirmation").fadeOut("fast", function() {
                 // Show the correct proposal, hide all the others
-                for (var i = 0; i < <%= @proposals.length %>; i++) {
+                for (var i = 1; i < <%= @proposals.length %>; i++) {
                     if (i != <%= index + 1 %>) {
                         $("#proposal_" + i).hide();
                     }
                 }
+                $('#instructions h2').html("Proposal <%= index + 1 %> of <%= @proposals.length %>");
+
+                // Make the shown proposal button go back to confirmation,
                 $("#proposal_<%= index + 1 %> .vote").unbind("click").click(function () {
-                    $("#proposal_<%= @proposals.length %>").fadeOut("fast", function() {
-                        $("#choose_section").hide();
+
+                    // updating confirmation data first
+                    var proposal = $(this).attr("name");
+                    var user_text = $(this).html();
+                    var vote = $(this).val();
+                    $("#confirmation_" + proposal + " .choice").html(user_text);
+                    $("#confirmation_" + proposal + " .hidden_proposal_vote").val(vote);
+
+                    $('#instructions h2').html("Confirmation");
+
+                    // Show confirmation
+                    $("#proposal_<%= index + 1 %>").fadeOut("fast", function() {
+                        $("#proposals_items").hide();
                         $("#confirmation").fadeIn("fast");
                     });
                 });
-                // Connect the proposal's buttons to the confirmation
-                $("#confirmation").fadeOut("fast");
-                $("#choose_section").fadeIn("fast");
+                $("#proposals_items").show();
+                $("#proposal_" + <%= index + 1 %>).fadeIn("fast");
             });
         });
     <% end %>
@@ -105,9 +140,9 @@
     $("#proposal_<%= i + 1 %> .vote").click(function () {
       var proposal = $(this).attr("name");
       var user_text = $(this).html();
-      var vote = $(this).val();
-      $("#confirmation_" + proposal + " .choice").html(user_text);
+      var vote = $(this).attr("value");
       $("#confirmation_" + proposal + " .hidden_proposal_vote").val(vote);
+      $("#confirmation_" + proposal + " .choice").html(user_text);
     });
   <% end %>
 
@@ -122,7 +157,6 @@
             $('#wait_section').fadeIn('fast', function(e) {
                 $('.confirmation').each(function(e) {
                     var proposal = $(this).attr('id');
-
                     var vote        = $("#" + proposal + " .hidden_proposal_vote").val();
                     var proposal_id = $("#" + proposal + " .hidden_proposal_id").val();
                     var public_key  = $("#" + proposal + " .hidden_public_key").val();
@@ -131,6 +165,7 @@
                     ballotArray[ballotArray.length] = public_key;
                 });
             });
+            clearVotingData();
             applet.vote(ballotArray.join(','), location.protocol + "//" + document.domain + ":" + location.port);
             return false;
         });
@@ -331,7 +366,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) before you tried to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) before you tried to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -343,7 +378,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Unknown error",
-                        'description': "An unknown error occurred before you tried to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</>. Try to reload the web page to restart the voting process."
+                        'description': "An unknown error occurred before you tried to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. Try to reload the web page to restart the voting process."
                     }
                 }
             },
@@ -394,7 +429,8 @@
                 'next_state': {
                     'state_id': "CHOOSE",
                     'section_id': "CHOOSE",
-                    'section_data': null
+                    'section_data': {
+                    }
                 }
             },
             {
@@ -443,7 +479,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -456,7 +492,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Unknown error",
-                        'description': "An unknown error occurred while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</>.  Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "An unknown error occurred while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>.  Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -469,7 +505,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Card removed",
-                        'description': "The card reader was disconnected from the computer while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to reconnect your card reader with your DNIe inserted on it to restart the voting process."
+                        'description': "The card reader was disconnected from the computer while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to reconnect your card reader with your DNIe inserted on it to restart the voting process."
                     }
                 }
             },
@@ -482,7 +518,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Card removed",
-                        'description': "You DNIe was disconnected from the card reader while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to reinsert your DNIe in the card reader to restart the voting process."
+                        'description': "You DNIe was disconnected from the card reader while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to reinsert your DNIe in the card reader to restart the voting process."
                     }
                 }
             },
@@ -495,7 +531,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Invalid PIN",
-                        'description': "You wronte an invalid PIN for your DNIe, your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader to restart the voting process."
+                        'description': "You wronte an invalid PIN for your DNIe, your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader to restart the voting process."
                     }
                 }
             },
@@ -508,7 +544,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error reading the card",
-                        'description': "A problem ocurred while reading the card while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. try to extract and reinsert your DNIe in the card reader to restart the voting process."
+                        'description': "A problem ocurred while reading the card while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. try to extract and reinsert your DNIe in the card reader to restart the voting process."
                     }
                 }
             },
@@ -521,7 +557,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Voting cancelled",
-                        'description': "You cancelled the voting process by denying to sign the vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "You cancelled the voting process by denying to sign the vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -534,7 +570,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Voting cancelled",
-                        'description': "You cancelled the voting process by denying to enter your DNIe PIN and your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "You cancelled the voting process by denying to enter your DNIe PIN and your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -547,7 +583,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error when sending the ballot to the server",
-                        'description': "A problem ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. This could be triggered to a slow or bad Internet connection. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "A problem ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. This could be triggered to a slow or bad Internet connection. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -560,7 +596,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error when processing the PIN",
-                        'description': "A problem ocurred while processing the PIN of your DNIe cardand it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "A problem ocurred while processing the PIN of your DNIe cardand it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -573,7 +609,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error when casting the ballot",
-                        'description': "A problem ocurred while casting the ballots and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "A problem ocurred while casting the ballots and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -591,7 +627,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error when sending the ballot to the server",
-                        'description': "A problem with your card or card reader ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "A problem with your card or card reader ocurred while sending your vote to the Ágora Ciudadana servers and it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -604,7 +640,7 @@
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error: user interaction timeout",
-                        'description': "It took you too much to respond while sending your vote to the Ágora Ciudadana servers and for your own security, it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
+                        'description': "It took you too much to respond while sending your vote to the Ágora Ciudadana servers and for your own security, it was <strong>NOT casted</strong> as a result. Please <a href=\"#report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader or reload the page to restart the voting process."
                     }
                 }
             },
@@ -663,7 +699,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) after you cancelled to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) after you cancelled to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -675,7 +711,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Unknown error",
-                        'description': "An unknown error occurred after you cancelled to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to restart the voting process."
+                        'description': "An unknown error occurred after you cancelled to send your vote. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to restart the voting process."
                     }
                 }
             },
@@ -687,7 +723,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -699,7 +735,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Unknown error",
-                        'description': "An unknown error occurred  after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to restart the voting process."
+                        'description': "An unknown error occurred  after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to restart the voting process."
                     }
                 }
             },
@@ -711,7 +747,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to try again."
+                        'description': "The Java applet used in this page crashed (or you killed it) after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
                     }
                 }
             },
@@ -723,7 +759,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Unknown error",
-                        'description': "An unknown error occurred after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#report_problem\">report us the problem by clicking here</>. You can reload the web page to vote again."
+                        'description': "An unknown error occurred after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#report_problem\">report us the problem by clicking here</a>. You can reload the web page to vote again."
                     }
                 }
             },
@@ -783,6 +819,16 @@
             var applet = $('#java_applet').get(0);
             applet.terminateApplet();
             $('#java_applet_wrapper').html("empty");
+        }
+
+
+        function clearVotingData() {
+            $('.confirmation').each(function(e) {
+                // Clear the voting data
+                var proposal = $(this).attr('id');
+                $("#confirmation_" + proposal + " .choice").html();
+                $("#confirmation_" + proposal + " .hidden_proposal_vote").val('');
+            });
         }
 
         function async_exception(className, description) {
@@ -867,27 +913,45 @@
                     + oldState + " to " + currentState + " and section "
                     + finalTransition['next_state']['section_id'] + " because of event " + code +"<br/>";
 
+                if (finalTransition.next_state.section_data.trigger_applet_restart == true) {
+                    html += "<strong>restarts applet</strong><br/>";
+                }
+
                 // Update the section data
                 if (finalTransition.next_state.section_id == "INSERT_CARD") {
+                    clearVotingData();
                     if (finalTransition.next_state.section_data.card_reader_connected) {
-                        $('#insert_card_section p').html("card reader connected, insert your DNIe");
+                        $('#insert_card_section p').html("Card reader connected, insert your DNIe");
                     } else {
                         $('#insert_card_section p').html("DNIe card reader not connected");
                     }
                 } else if (finalTransition.next_state.section_id == "ERROR") {
+                    clearVotingData();
                     $('#error_section h2').html(finalTransition.next_state.section_data.title);
-                    $('#error_section h3').html(finalTransition.next_state.section_data.description);
+                    $('#error_section p').html(finalTransition.next_state.section_data.description);
                 } else if (finalTransition.next_state.section_id == "WAIT") {
-                    $('#wait_section h2').html(finalTransition.next_state.section_data.title);
-                    $('#wait_section h3').html(finalTransition.next_state.section_data.description);
-                }else if (finalTransition.next_state.section_id == "INFO") {
+                    $('#wait_section div').html(
+                        finalTransition.next_state.section_data.title + "<br/><small>"
+                        + finalTransition.next_state.section_data.description + "</small>"
+                    );
+                } else if (finalTransition.next_state.section_id == "INFO") {
                     $('#info_section h2').html(finalTransition.next_state.section_data.title);
-                    $('#info_section h3').html(finalTransition.next_state.section_data.description);
+                    $('#info_section p').html(finalTransition.next_state.section_data.description);
+                } else if (finalTransition.next_state.section_id == "CHOOSE") {
+                    clearVotingData();
+                
+                    // Show the first proposal only
+                    $(".proposal_li_item").hide();
+                    $("#proposal_1").show();
+                    $("#proposals_items").show();
+                    $("#confirmation").hide();
                 }
 
                 // Show the appropiate section
                 var sections = ["INSERT_CARD", "ERROR", "WAIT", "CHOOSE", "SUCCESS", "INFO"];
-                for (var section in sections) {
+
+                for (var i in sections) {
+                    var section = sections[i];
                     if (section == finalTransition.next_state.section_id) {
                         $("#" + section.toLowerCase() + "_section").fadeIn("fast");
                     } else {
@@ -923,34 +987,9 @@
             return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
         }
 </script>
-    
-<div id="confirmation">
-  <ul>
-    <% @proposals.each_with_index do |proposal, index| %>
-      <li class="confirmation" id="confirmation_proposal_<%= index + 1 %>">
-        <h3>
-          <span class="number"><%= index + 1 %></span>
-          <span class="title"><%= proposal.name %></span>
-          <%= hidden_field_tag 'proposal_id', proposal.id, :class => "hidden_proposal_id" %>
-          <%= hidden_field_tag 'proposal_vote', '-1', :class => "hidden_proposal_vote" %>
-          <%= hidden_field_tag 'proposal_public_key', proposal.public_key, :class => "hidden_public_key" %>
-          
-        </h3>
-        <span class="choice"></span>
- 	      <span class="change"><%= link_to "<< change", "#", :class => "change_vote", :name => "#{index + 1}"  %></span>
-      </li>
-    <% end %>
-  </ul>
-  
-  
-  <div id="send_button">
-   <%= link_to "Send vote", retrieve_dni_path %>
-  </div>
-  
-</div>
 
 <div id='wait_section'>
-    <div>Sending your vote<br />Please wait..</div>
+    <div>Sending your vote<br /><small>Please wait..</small></div>
 </div>
 
 <div id="success_section">
@@ -959,11 +998,11 @@
 
 
 <div id="error_section">
-    <h2>Title</h2><h3>Description</h3>
+    <h2>Title</h2><p>Description</p>
 </div>
 
 <div id="info_section">
-    <h2>Title</h2><h3>Description</h3>
+    <h2>Title</h2><p>Description</p>
 </div>
 
 
@@ -974,3 +1013,8 @@
 <div id="applet_log">
 ...
 </div>
+
+<div id="java_applet_wrapper">
+    <applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="0" height="0">applet yeah</applet>
+</div>
+
