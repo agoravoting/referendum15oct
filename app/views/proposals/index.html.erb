@@ -295,6 +295,7 @@
         * java.security.ProviderException|Initialization failed
         * java.security.KeyStoreException
         * java.security.ProviderException|sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR
+        * java.lang.RuntimeException|Not a byte[]
         * org.agora.VotingApplet$PinCancelledByUser
         * org.agora.VotingApplet$BallotCastingError
         * org.agora.VotingApplet$SignatureCertificateNotFoundError
@@ -530,27 +531,18 @@
             },
             {
                 'initial_states': ["PROCESSING_VOTE"],
-                'events': ["java.security.InvalidKeyException"],
-                'next_state': {
-                    'state_id': "UNRECOVERABLE_VOTING_ERROR",
-                    'section_id': "ERROR",
-                    'section_data': {
-                        'trigger_applet_restart': true,
-                        'title': "Invalid PIN",
-                        'description': "You wronte an invalid PIN for your DNIe, your vote was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader to restart the voting process."
-                    }
-                }
-            },
-            {
-                'initial_states': ["PROCESSING_VOTE"],
-                'events': ["org.agora.VotingApplet$InitTimeoutError"],
+                'events': [
+                    "org.agora.VotingApplet$InitTimeoutError",
+                    "java.lang.RuntimeException|Not a byte[]",
+                    "java.security.InvalidKeyException"
+                ],
                 'next_state': {
                     'state_id': "UNRECOVERABLE_VOTING_ERROR",
                     'section_id': "ERROR",
                     'section_data': {
                         'trigger_applet_restart': true,
                         'title': "Error reading the card",
-                        'description': "A problem ocurred while reading the card while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. try to extract and reinsert your DNIe in the card reader to restart the voting process."
+                        'description': "A problem ocurred while reading the card while trying to send your vote and it was <strong>NOT casted</strong> as a result. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a> if you are sure it was not your fault. Try to extract and reinsert your DNIe in the card reader to restart the voting process."
                     }
                 }
             },
@@ -846,6 +838,11 @@
             } else if (className == "java.security.ProviderException" &&
                 description == "sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR") {
                 pushErrorEvent(className + "|" + description, "", "USER DID NOT WANT TO SIGN");
+
+
+            } else if (className == "java.lang.RuntimeException" &&
+                description == "Not a byte[]") {
+                pushErrorEvent(className + "|" + description, "", "USER PROBABLY UNPLUG DNIE");
 
             } else {
                 pushErrorEvent(className, description, "");

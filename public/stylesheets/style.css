@@ -568,7 +568,6 @@ applet {
 }
 
 #applet_log {
-    display: none;
     border: solid 1px red;
     clear: both;
     width: 100%;
