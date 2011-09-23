@@ -441,17 +441,6 @@
                 }
             },
             {
-                'initial_states': ["SUCCESS"],
-                'events': ["CARD_INSIDE_READER"],
-                'next_state': {
-                    'state_id': "CHOOSE",
-                    'section_id': "CHOOSE",
-                    'section_data': {
-                        'trigger_applet_restart': false
-                    }
-                }
-            },
-            {
                 'initial_states': ["CHOOSE", "INSERT_CARD_AGAIN"],
                 'events': ["java.security.ProviderException|Initialization failed"],
                 'next_state': {
@@ -1008,6 +997,7 @@
 
 <div id="success_section">
     <h2>Your vote was successfully casted</h2><h3>Thanks for participating</h3>
+    <small>You can remove your DNIe from the card reader</small>
 </div>
 
 
