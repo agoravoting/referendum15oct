@@ -3,4 +3,5 @@ config/*.yml
 db/*.sqlite3
 log/*.log
 tmp/
+public/lib/agora-applet.jar
 vendor/bundle/
