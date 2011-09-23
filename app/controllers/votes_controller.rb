@@ -4,9 +4,16 @@ class VotesController < InheritedResources::Base
   # POST /votes
   def create
     args = [params[:dnie_certificate], params[:votes_signature]]
+    error = false
 
     params[:voting_id].each_index { |index|
         proposal = Proposal.find(params[:voting_id][index])
+        # cannot vote an inactive proposal!
+        if not proposal.active
+            error = true
+            result = 'FAIL'
+            break
+        end
         args += [
             params[:encrypted_vote][index],
             proposal.public_key,
@@ -17,7 +24,9 @@ class VotesController < InheritedResources::Base
         ]
     }
 
-    result = %x[../applet-verificatum/votecheck.sh #{args.join(' ')}]
+    if not error
+        result = %x[../applet-verificatum/votecheck.sh #{args.join(' ')}]
+    end
 
     if result != 'FAIL'
         # "CIF (with number),Name,Surname1,Surname2"

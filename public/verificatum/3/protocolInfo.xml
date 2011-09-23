@@ -1,0 +1,154 @@
+
+<!-- ATTENTION! This is a protocol information file. It contains all 
+     the parameters of a protocol session as agreed by all parties.
+     
+     Each party must hold an IDENTICAL copy of this file. DO NOT 
+     edit this file in any way after you and the administrators of 
+     the other parties have agreed on its content. Doing so may in 
+     the worst case render the execution insecure. -->
+
+<protocol>
+
+   <!-- Session identifier of this protocol execution. -->
+   <sid>MyDemo</sid>
+
+   <!-- Name of this protocol execution. -->
+   <name>Swedish Election</name>
+
+   <!-- Description of this protocol execution. -->
+   <descr></descr>
+
+   <!-- Group over which the protocol is executed. An instance of 
+        verificatum.arithm.PGroup. -->
+   <pgroup>ModPGroup(safe-prime modulus=2*order+1. order bit-length = 1024)::0000000002010000001c766572696669636174756d2e61726974686d2e4d6f645047726f75700000000004010000008101d9f27f10e6a62b003160daea5bed498c3dc4fcbf5d4badf230ec7937cf171dc024acfee3a0064f8627319092868724b3afdd0127eafc2187f251da5d0ce61e1ed31fd33afa2edc53174fc19c3c08cc8672b85fc495003494ae78f108f050a5c1753a8a44f33f67e2a7f0b38613292550c84e7af73bb8e7575de384594a85f97b010000008100ecf93f887353158018b06d752df6a4c61ee27e5faea5d6f918763c9be78b8ee012567f71d00327c31398c84943439259d7ee8093f57e10c3f928ed2e86730f0f698fe99d7d176e298ba7e0ce1e046643395c2fe24a801a4a573c7884782852e0ba9d4522799fb3f153f859c3099492a864273d7b9ddc73abaef1c22ca542fcbd010000008101c83d911aeb75c21582a6cdce4a9f5b287b9948a4e0c9d6b82cd82e0a29a9dabb78bd0e724456082f8e67321e8e5e5bb8c894b38d46005d02363ec1ccff2c6875fb6b866eff128debc09e5b79c94392ece36d9add853fcf5e31c2363025f10bed7e4bae268433b97e07c81ff39e1a991bd2d8fd4177450ff1fb7fb2dbe7b27451010000000400000001</pgroup>
+
+   <!-- Interface that defines how to communicate with the mix-net. 
+        This includes not only the format, but also the underlying 
+        submission scheme. Possible values are "native" and "helios". 
+        The former is simply the byte tree format used internally in 
+        Verificatum. The latter is the format needed by the Helios 
+        system <http://www.heliosvoting.org>. -->
+   <inter>native</inter>
+
+   <!-- Maximal number of ciphertexts for which precomputation is 
+        performed. If this is set to zero, then it is assumed that 
+        precomputation is not performed as a separate phase, i.e., it 
+        defaults to the number of submitted ciphertexts during mixing. 
+        -->
+   <maxciph>0</maxciph>
+
+   <!-- Decides statistical error in distribution. -->
+   <statdist>100</statdist>
+
+   <!-- Bit length of challenges in interactive proofs. -->
+   <cbitlen>100</cbitlen>
+
+   <!-- Bit length of challenges in non-interactive random-oracle 
+        proofs. -->
+   <cbitlenro>200</cbitlenro>
+
+   <!-- Bit length of each component in random vectors used for 
+        batching. -->
+   <vbitlen>100</vbitlen>
+
+   <!-- Bit length of each component in random vectors used for 
+        batching in non-interactive random-oracle proofs. -->
+   <vbitlenro>200</vbitlenro>
+
+   <!-- Pseudo random generator used to derive random vectors from 
+        jointly generated seeds (instance of verificatum.crypto.PRG). 
+        -->
+   <prg>verificatum.crypto.PRGHeuristic(SHA1 with counter)::0000000002010000001f766572696669636174756d2e63727970746f2e5052474865757269737469630100000000</prg>
+
+   <!-- Hashfunction used to implement random oracles (instance of 
+        verificatum.crypto.Hashfunction). Random oracles with various 
+        output lengths are then implemented, using the given 
+        hashfunction, in verificatum.crypto.RandomOracle.
+        WARNING! Do not use this option unless you know exactly what 
+        you are doing. -->
+   <rohash>verificatum.crypto.HashfunctionHeuristic(SHA-256)::00000000020100000028766572696669636174756d2e63727970746f2e4861736866756e6374696f6e48657572697374696301000000075348412d323536</rohash>
+
+   <!-- Determines if the proofs of correctness of an execution are 
+        interactive or non-interactive ("interactive" or 
+        "noninteractive"). The "noninteractive"-proofs of correctness 
+        are incompatible with the "cramershoup" interface (option: -
+        inter). -->
+   <corr>noninteractive</corr>
+
+   <party>
+
+      <!-- Sorting attribute used to sort parties with respect to their 
+           roles in the protocol. -->
+      <srtbyrole>a:shuffler</srtbyrole>
+
+      <!-- Name of party. -->
+      <name>Party1</name>
+
+      <!-- Description of party. -->
+      <pdescr></pdescr>
+
+      <!-- Public signature key (instance of crypto.SignaturePKey). -->
+      <pubkey>verificatum.crypto.SignaturePKeyHeuristic(RSA, bitlength=2048)::00000000020100000029766572696669636174756d2e63727970746f2e5369676e6174757265504b65794865757269737469630000000002010000000400000800010000012630820122300d06092a864886f70d01010105000382010f003082010a0282010100804fa219cd6b0d9bc9bf30e03ec0dbf47a08bbe82dfdd9d4e82c38a35968375bc9abf22cfe4007b31ae337fbb9c96a2761b4a21869e2721c4f43c470db610c3375a9eaac6aae37a92c5a477d44ccae7b015174966617be9e9419b9db387d98ca4a8274159d707f4ee8ce5dd7a9430d80c8ec96e36e0714f2a7c6f7c54b81da88d14aadcc8bf16dac03deb5c0faaae6a811c94244bf0d6dfbcb88cd277a1f0716bcf4f36d7d67677f28c312e37550ba5936e0e1fb475de4edcbc5f8f0ccd46fa5376155138bed244e7bc4078c4cd0c7f3dc18decd06239eae73ba5803e0e22fb4babb50e2f2b7c9a8f3287a7cb08823d61e24043719f8bd37c5c16020b1d144eb0203010001</pubkey>
+
+      <!-- URL to our HTTP server. -->
+      <http>http://localhost:8081</http>
+
+      <!-- Socket address given as <hostname>:<port> to our hint server. 
+           A hint server is a simple UDP server that reduces latency and 
+           traffic on the HTTP servers. -->
+      <hint>localhost:4041</hint>
+
+   </party>
+
+   <party>
+
+      <!-- Sorting attribute used to sort parties with respect to their 
+           roles in the protocol. -->
+      <srtbyrole>a:shuffler</srtbyrole>
+
+      <!-- Name of party. -->
+      <name>Party2</name>
+
+      <!-- Description of party. -->
+      <pdescr></pdescr>
+
+      <!-- Public signature key (instance of crypto.SignaturePKey). -->
+      <pubkey>verificatum.crypto.SignaturePKeyHeuristic(RSA, bitlength=2048)::00000000020100000029766572696669636174756d2e63727970746f2e5369676e6174757265504b65794865757269737469630000000002010000000400000800010000012630820122300d06092a864886f70d01010105000382010f003082010a0282010100a074f5cefb8c888e0c11e20496d3daf57ed2eae8acefcb2d8c93ebe61f509ed10ab5023143699211c332af83270623a5ceffe9b5a36c8a51f01da746ba0870d3d2edc2c5247481770f873ab208c198d4a048f43f104518fd44b333ebf9cef73c1ad2e7c4670e7493e7be5c89296d634b3237955d16b6d4491ac421040341a7a7ea4883b2b2a053bb6d05b9579c3585de5720c09a9669a6213b9502400ea0ec622d9d09d669867fa8ee042a76626b01de82ca5754a285356c0a57d1d261253139d0b54fa716a8fb5d0c32ec7b811cc6a8759b16ef35c685ad58f53074e30375f8a80dcc0e61d31e38e21c9b8bb652bf760f5d28c9bef9bbfca37f8f31c0f1ef5d0203010001</pubkey>
+
+      <!-- URL to our HTTP server. -->
+      <http>http://localhost:8082</http>
+
+      <!-- Socket address given as <hostname>:<port> to our hint server. 
+           A hint server is a simple UDP server that reduces latency and 
+           traffic on the HTTP servers. -->
+      <hint>localhost:4042</hint>
+
+   </party>
+
+   <party>
+
+      <!-- Sorting attribute used to sort parties with respect to their 
+           roles in the protocol. -->
+      <srtbyrole>a:shuffler</srtbyrole>
+
+      <!-- Name of party. -->
+      <name>Party3</name>
+
+      <!-- Description of party. -->
+      <pdescr></pdescr>
+
+      <!-- Public signature key (instance of crypto.SignaturePKey). -->
+      <pubkey>verificatum.crypto.SignaturePKeyHeuristic(RSA, bitlength=2048)::00000000020100000029766572696669636174756d2e63727970746f2e5369676e6174757265504b65794865757269737469630000000002010000000400000800010000012630820122300d06092a864886f70d01010105000382010f003082010a0282010100ec1816d7432589db28bd2d446492f546f6bffab7b8e96e5a3f6b3bc41251b14793b79ec2f2a74d03d0d3fb577ec4d7dc4b8c83aae4c7c482743293ae8c9f8412d188b5f187470845d38c675e9629f3a4dcec038bdfceb679448010c04ca476d477e179b23fdd6dfbe40004929b18c79ef7d1ab75039b2357ae50bec30164f0238801569bfc1c9200c451e152906d9fbd01f09a8c516b08f5fa1e20ba608aa0f68281fbd5b3b45f2afd228cdffa35bdb518891ac3a2143ecefbc9ba5a1ad7fab99f0d79d073164577a5bf437ad0c169c7ef4bcb58949815b1c589138820ef3267fd14849508eaa500500394ff2f8e6f8441c1e800e69767518c89d639e55733a10203010001</pubkey>
+
+      <!-- URL to our HTTP server. -->
+      <http>http://localhost:8083</http>
+
+      <!-- Socket address given as <hostname>:<port> to our hint server. 
+           A hint server is a simple UDP server that reduces latency and 
+           traffic on the HTTP servers. -->
+      <hint>localhost:4043</hint>
+
+   </party>
+
+</protocol>
+

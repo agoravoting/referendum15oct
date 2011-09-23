@@ -1,7 +1,6 @@
 Referendum15oct::Application.routes.draw do
   resources :proposals do
     get :bulletin_board, :on => :member
-    get :public_key, :on => :member
   end
 
   resources :votes
@@ -11,6 +10,7 @@ Referendum15oct::Application.routes.draw do
   match '/sistema-de-votacion'  => 'pages#system_info', :as => 'system_info'
   match '/retrieve_dni'  => 'pages#retrieve_dni', :as => 'retrieve_dni'
   match '/confirmation'  => 'pages#confirmation', :as => 'confirmation'
+  match '/process_ballots' => 'proposals#process_ballots'
 
   root :to => "pages#insert_dni"
 end

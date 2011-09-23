@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(:version => 20110703234118) do
     t.string   "name"
     t.text     "description"
     t.text     "public_key"
+    t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

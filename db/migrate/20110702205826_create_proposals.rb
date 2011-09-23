@@ -4,6 +4,7 @@ class CreateProposals < ActiveRecord::Migration
       t.string :name
       t.text :description
       t.text :public_key
+      t.boolean :active
 
       t.timestamps
     end
