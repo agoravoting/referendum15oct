@@ -154,6 +154,11 @@ header h1 {
 	height: 270px;
 	padding: 90px 0;
 	text-align: center;
+    display: none;
+}
+
+#choose_section, #info_section, #error_section {
+    display: none;
 }
 
 #success_section h2 {

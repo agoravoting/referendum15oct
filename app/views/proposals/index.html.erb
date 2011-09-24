@@ -303,6 +303,7 @@
         * UNKNOWN_ERROR
         * org.agora.VotingApplet$IncompatibleJavaVersion
         * java.security.ProviderException|Initialization failed
+        * java.security.ProviderException|Library does not exist
         * java.security.KeyStoreException
         * java.security.ProviderException|sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR
         * java.lang.RuntimeException|Not a byte[]
@@ -349,7 +350,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Unsupported web browser",
-                        'description': "You are using a web Browser that is not supported. Unfortunately, currently only Mozilla Firefox is supported. If you have it installed already in your computer, try to load the web page on it, or install Firefox if you don't have it installed yet. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Web_Browsers#Not using Firefox\">here for instructions on how to install Mozilla Firefox</a>."
+                        'description': "You are using a web Browser that is not supported. Unfortunately, currently only Mozilla Firefox is supported. If you have it installed already in your computer, try to load the web page on it, or install Firefox if you don't have it installed yet. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Install#Not using Firefox\">here for instructions on how to install Mozilla Firefox</a>."
                     }
                 }
             },
@@ -363,7 +364,7 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Java support is not active",
-                        'description': "You don't have Java support enabled in your web browser but it's needed for Agora Ciudadana to work. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Java#Install_and_Configure_Java\">here for instructions on how to install and configure Java in your web browser</a>."
+                        'description': "You don't have Java support enabled in your web browser but it's needed for Agora Ciudadana to work. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Install#Install_and_Configure_Java\">here for instructions on how to install and configure Java in your web browser</a>."
                     }
                 }
             },
@@ -377,7 +378,21 @@
                     'section_id': "ERROR",
                     'section_data': {
                         'title': "Incompatible Java version",
-                        'description': "You have Java support enabled in your web browser but another version is needed for Agora Ciudadana to work. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Java#Install_and_Configure_Java\">here for instructions on how to install and configure Java in your web browser</a>."
+                        'description': "You have Java support enabled in your web browser but another version is needed for Agora Ciudadana to work. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Install#Install_and_Configure_Java\">here for instructions on how to install and configure Java in your web browser</a>."
+                    }
+                }
+            },
+            {
+                'initial_states': ["INIT", "INSERT_CARD", "INSERT_CARD_AGAIN",
+                    "CHOOSE", "PROCESSING_VOTE", "UNRECOVERABLE_CARD_VOTING_ERROR", "UNRECOVERABLE_VOTING_ERROR",
+                    "SUCCESS"],
+                'events': ["java.security.ProviderException|Library does not exist"],
+                'next_state': {
+                    'state_id': "UNRECOVERABLE_ERROR",
+                    'section_id': "ERROR",
+                    'section_data': {
+                        'title': "OpenDNIe library not installed or configured",
+                        'description': "You need to install and configure the OpenDNIe for Agora Ciudadana to work. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Install#Install_and_Configure_OpenDNIe\">here for instructions on how to install OpenDNIe and configure it for your web browser</a>."
                     }
                 }
             },
@@ -818,6 +833,11 @@
             return this.match("^" + str) == str;
         }
 
+        String.prototype.endsWith = function(str) {
+            return this.match(str + "$") == str;
+        }
+
+
         function triggerAppletRestart() {
             restartApplet = true;
             var applet = $('#java_applet').get(0);
@@ -845,6 +865,9 @@
                 description == "sun.security.pkcs11.wrapper.PKCS11Exception: CKR_GENERAL_ERROR") {
                 pushErrorEvent(className + "|" + description, "", "USER DID NOT WANT TO SIGN");
 
+            } else if (className == "java.security.ProviderException" &&
+                description.startsWith("Library") && description.endsWith("does not exist")) {
+                pushErrorEvent(className + "|Library does not exist", "Error loading the library");
 
             } else if (className == "java.lang.RuntimeException" &&
                 description == "Not a byte[]") {
