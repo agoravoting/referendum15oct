@@ -76,6 +76,16 @@
     $("#info_section").hide();
     $("#wait_section").hide();
 
+    pushUpdateEvent("DEBUG_INFO", "inside here", "");
+    // This are some checks that are done at startup
+    if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
+        pushErrorEvent("NOT_USING_FIREFOX", "ERROR", "Unfortunately, only Mozilla Firefox is currently supported");
+    } else if (!navigator.javaEnabled()) {
+        pushErrorEvent("JAVA_DISABLED", "ERROR", "");
+    } else {
+        timeout = setTimeout("checkStatus()", 1000);
+    }
+
     // Connect voting buttons to show next proposal screen
     <% @proposals.each_with_index do |proposal, i| %>
       $("#proposal_<%= i + 1 %> .vote").click(function () {
@@ -330,7 +340,9 @@
         var currentState = "INIT";
         var stateTransitions = [
             {
-                'initial_states': ["INIT"],
+                'initial_states': ["INIT", "INSERT_CARD", "INSERT_CARD_AGAIN",
+                    "CHOOSE", "PROCESSING_VOTE", "UNRECOVERABLE_CARD_VOTING_ERROR", "UNRECOVERABLE_VOTING_ERROR",
+                    "SUCCESS"],
                 'events': ["NOT_USING_FIREFOX"],
                 'next_state': {
                     'state_id': "UNRECOVERABLE_ERROR",
@@ -342,7 +354,9 @@
                 }
             },
             {
-                'initial_states': ["INIT"],
+                'initial_states': ["INIT", "INSERT_CARD", "INSERT_CARD_AGAIN",
+                    "CHOOSE", "PROCESSING_VOTE", "UNRECOVERABLE_CARD_VOTING_ERROR", "UNRECOVERABLE_VOTING_ERROR",
+                    "SUCCESS"],
                 'events': ["JAVA_DISABLED"],
                 'next_state': {
                     'state_id': "UNRECOVERABLE_ERROR",
@@ -354,7 +368,9 @@
                 }
             },
             {
-                'initial_states': ["INIT"],
+                'initial_states': ["INIT", "INSERT_CARD", "INSERT_CARD_AGAIN",
+                    "CHOOSE", "PROCESSING_VOTE", "UNRECOVERABLE_CARD_VOTING_ERROR", "UNRECOVERABLE_VOTING_ERROR",
+                    "SUCCESS"],
                 'events': ["org.agora.VotingApplet$IncompatibleJavaVersion"],
                 'next_state': {
                     'state_id': "UNRECOVERABLE_ERROR",
@@ -768,16 +784,6 @@
         var restartApplet = false;
         var appletLoadedOnce = false;
         var appletCode = '<applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="0" height="0"></applet>';
-
-
-        // This are some checks that are done at startup
-        if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
-            pushErrorEvent("NOT_USING_FIREFOX", "ERROR", "Unfortunately, only Mozilla Firefox is currently supported");
-        } else if (!navigator.javaEnabled()) {
-            pushErrorEvent("JAVA_DISABLED", "ERROR", "");
-        } else {
-            timeout = setTimeout("checkStatus()", 1000);
-        }
 
         function checkStatus() {
             // If applet is not loaded
