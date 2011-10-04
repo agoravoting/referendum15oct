@@ -128,7 +128,7 @@ header h1 {
 
 /* Wellcome Page */
 
-#welcome_text {
+#insert_card_section_wrapper {
     float: left;
 	width: 440px;
 	height: 270px;
@@ -142,28 +142,74 @@ header h1 {
 	width: 330px;
 }
 
-#welcome_text h2 {
+#insert_card_section_wrapper h2 {
   font-size: 550%;		
 }
 
 
 /* Final Page */
 
-#goodbye_text {
+#success_section {
 	width: 960px;
 	height: 270px;
 	padding: 90px 0;
 	text-align: center;
+    display: none;
 }
 
-#goodbye_text h2 {
+#choose_section, #info_section, #error_section {
+    display: none;
+}
+
+#success_section h2 {
   font-size: 650%;		
 }
 
-#goodbye_text h3 {
+#success_section h3 {
   margin-top: 20px;
   font-size: 350%;
   color: #888;	
+}
+
+
+
+/* Error section */
+
+#error_section {
+    width: 960px;
+    height: 270px;
+    padding: 90px 0;
+    text-align: center;
+}
+
+#error_section h2 {
+  font-size: 650%;
+}
+
+#error_section h3 {
+  margin-top: 20px;
+  font-size: 350%;
+  color: #888;
+}
+
+
+/* Info section */
+
+#info_section {
+    width: 960px;
+    height: 270px;
+    padding: 90px 0;
+    text-align: center;
+}
+
+#info_section h2 {
+  font-size: 650%;
+}
+
+#info_section h3 {
+  margin-top: 20px;
+  font-size: 350%;
+  color: #888;
 }
 
 /* Proposals */
@@ -414,7 +460,7 @@ header h1 {
 	color: #fff;
 }
 
-#wait {
+#wait_section {
 	display: none;
     position: absolute;
     left: 0px;
@@ -426,7 +472,7 @@ header h1 {
     background-image:url("../images/background-trans.png");	
 }
 
-#wait div {
+#wait_section div {
 	 width: 470px;
 	 height: 110px;
 	 margin: 200px auto;
@@ -437,14 +483,14 @@ header h1 {
 	 font-weight: bold;
 }
 
-.borderradius #wait div {
+.borderradius #wait_section div {
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-khtml-border-radius: 8px;
 	-webkit-border-radius: 8px;
 }
 
-.boxshadow #wait div {
+.boxshadow #wait_section div {
 	box-shadow: 1px 1px 20px #000;
 	-moz-box-shadow: 1px 1px 20px #000;
     -webkit-box-shadow: 1px 1px 20px #000;
@@ -517,3 +563,19 @@ footer li a:hover, footer li a:active {
   h2, h3{ page-break-after: avoid; }
 }
 
+applet {
+    width: 0px;
+    height: 0px;
+}
+
+#applet_info {
+    display: none;
+}
+
+#applet_log {
+    border: solid 1px red;
+    clear: both;
+    width: 100%;
+    height: 250px;
+    overflow:scroll;
+}
