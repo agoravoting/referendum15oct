@@ -3,7 +3,7 @@ module Verificatum
   extend self
   
   def doc
-    protocol_info = "#{Rails.root}/public/verificatum/protocolInfo.xml"
+    protocol_info = "#{Rails.root}/public/verificatum/1/protocolInfo.xml"
     @doc ||= Nokogiri::XML(open(protocol_info))
   end
   
