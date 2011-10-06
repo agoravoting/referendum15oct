@@ -9,7 +9,8 @@ Application to vote with your electronic ID in the Referedum of October 15th.
 == Install and Use:
 
     git clone git://github.com/agoraciudadana/referendum15oct.git
-
+    git clone git://github.com/agoraciudadana/applet-verificatum.git
+    
     cd referendum15oct
 
     bundle
@@ -22,11 +23,15 @@ Application to vote with your electronic ID in the Referedum of October 15th.
 
     rails server
 
-    Start voting!
+    Start Voting!
 
 == Running the test suite:
 
     rake spec
+
+== Gotchas
+
+  If you run into a java class not found error, try running the app with {pow}[http://pow.cx/].
 
 == Contribute:
 
@@ -42,11 +47,7 @@ Application to vote with your electronic ID in the Referedum of October 15th.
 
      6. Wait for comments from maintainers or code merge
 
-     IRC: irc.freenode.net #agoraciudadana
-
-== Gotchas
-  
-  If you run into a java class not found error, try running the app with unicorn_rails instead of rails server.
+     IRC: irc.freenode.net #agoraciudadana #agorarumble
        
 == More info
 
