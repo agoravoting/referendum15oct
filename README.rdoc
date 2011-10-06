@@ -1,7 +1,7 @@
 = Referendum 15 de octubre
  
 * http://referendum15oct.heroku.com
-* https://agora.wadobo.com/
+* https://agora.wadobo.com
  
 == Description:
 
