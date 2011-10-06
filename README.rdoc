@@ -1,6 +1,7 @@
 = Referendum 15 de octubre
  
 * http://referendum15oct.heroku.com
+* https://agora.wadobo.com/
  
 == Description:
 
@@ -13,6 +14,8 @@ Application to vote with your electronic ID in the Referedum of October 15th.
     
     cd referendum15oct
 
+    gem install bundler
+    
     bundle
 
     cp config/database.yml.example config/database.yml
