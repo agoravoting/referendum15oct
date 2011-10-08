@@ -1,39 +1,6 @@
 class Vote < ActiveRecord::Base
   belongs_to :proposal
   
-  def self.encrypt(params)
-    args = [params[:dnie_certificate], params[:votes_signature]]
-    error = false
-
-    params[:voting_id].each_index { |index|
-      proposal = Proposal.find(params[:voting_id][index])
-      # cannot vote an inactive proposal!
-      if not proposal.active
-          error = true
-          result = 'FAIL'
-          break
-      end
-      args += [
-          params[:encrypted_vote][index],
-          proposal.public_key,
-          params[:voting_id][index],
-          params[:a_factor][index],
-          params[:d_factor][index],
-          params[:u_factor][index]
-      ]
-    }
-
-    if not error
-      result = %x[../applet-verificatum/votecheck.sh #{args.join(' ')}]
-    end
-
-    if result != 'FAIL'
-      store_encrypted_votes(result, params)
-    end
-    
-    result
-  end
-  
   def self.store_encrypted_votes(result, params)
     # "CIF (with number),Name,Surname1,Surname2"
     cif, name, surname1, surname2 = result.strip().split(',')

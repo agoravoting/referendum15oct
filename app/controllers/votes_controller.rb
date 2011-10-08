@@ -2,7 +2,7 @@ class VotesController < InheritedResources::Base
   belongs_to :proposal
   
   def create
-    result = Vote.encrypt(params)
+    result = Verificatum.encrypt(params)
     
     if result.strip == "FAIL"
       head :bad_request
