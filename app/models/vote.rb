@@ -3,19 +3,11 @@ class Vote < ActiveRecord::Base
   belongs_to :citizen
   
   def self.store_encrypted_votes(result, params)
-    # "CIF (with number),Name,Surname1,Surname2"
-    cif, name, surname1, surname2 = result.strip.split(',')
-    # if we were really recording the votes, we would add the cif, surname1,
-    # surname2 to each of the votings refered in params[:vote_id]
-    cif      = cif.strip
-    name     = name.strip
-    surname1 = surname1.strip
-    surname2 = surname2.strip
-    
     # register the votes
     signed_votes = ActiveSupport::JSON.encode(params)
     
-    #register citizen
+    cif, name, surname1, surname2 = result.strip.split(',').map(&:strip)
+            
     unless citizen = Citizen.where(:cif => cif).first
       citizen = Citizen.create!(:first_name       => name,
                                 :last_name1       => surname1,
