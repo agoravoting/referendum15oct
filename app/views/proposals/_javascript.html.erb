@@ -89,9 +89,9 @@
   // confirmation screen is instantly updated
   <% @proposals.each_with_index do |proposal, i| %>
     $("#proposal_<%= i + 1 %> .vote").click(function () {
-      var proposal = $(this).attr("name");
+      var proposal  = $(this).attr("name");
       var user_text = $(this).html();
-      var vote = $(this).attr("value");
+      var vote      = $(this).attr("value");
       $("#confirmation_" + proposal + " .hidden_proposal_vote").val(vote);
       $("#confirmation_" + proposal + " .choice").html(user_text);
     });

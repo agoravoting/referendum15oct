@@ -1,90 +1,91 @@
 <div id="insert_card_section">
-    <div id="insert_card_section_wrapper">
-        <h2>Insert your DNIe<br /> for voting</h2>
-        <p>Loading, please wait...</p>
-    </div>
-    <div id="insert_dnie_icon">
-        <%= image_tag("dni_icon_insertar.png", :alt => "Icon of a DNIe being introduced into the card reader") %>
-    </div>
+  <div id="insert_card_section_wrapper">
+      <h2>Insert your DNIe<br /> for voting</h2>
+      <p>Loading, please wait...</p>
+  </div>
+  <div id="insert_dnie_icon">
+      <%= image_tag("dni_icon_insertar.png", :alt => "Icon of a DNIe being introduced into the card reader") %>
+  </div>
 </div>
 
 <div id="choose_section">
-    <div id="instructions"><h2>Proposal 1 of <%= @proposals.length %></h2></div>
-    <div id="proposals_items">
-        <ul>
-            <% @proposals.each_with_index do |proposal, index| %>
-                <li id="proposal_<%= index + 1 %>" class="proposal_li_item">
-
-                    <div id="proposals_title">
-                        <h3><%= index + 1 %>. <%= proposal.name %></h3>
-                    </div>
-                    <div id="proposal_description">
-                        <%= raw proposal.description %>
-                    </div>
-                    <div id="proposals_icon">
-                        <%=image_tag("proposal_icon_#{index + 1}.png", :alt => "Propossal topic icon")%>
-                    </div>
-
-                    <div id="proposals_buttons">
-                        <ul>
-                                <li><%= link_to "Yes", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "0" %></li>
-                                <li><%= link_to "No", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "1" %></li>
-                                <li><%= link_to "Abstention", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "2" %></li>
-                        </ul>
-                    </div>
-
-                    <br/>
-                </li>
-            <% end %>
-        </ul>
+  <div id="instructions">
+    <h2>Proposal 1 of <%= @proposals.length %></h2>
+  </div>
+  
+  <div id="proposals_items">
+    <ul>
+      <% @proposals.each_with_index do |proposal, index| %>
+        <li id="proposal_<%= index + 1 %>" class="proposal_li_item">
+          <div id="proposals_title">
+              <h3><%= index + 1 %>. <%= proposal.name %></h3>
+          </div>
+          
+          <div id="proposal_description">
+              <%= raw proposal.description %>
+          </div>
+          
+          <div id="proposals_icon">
+              <%=image_tag("proposal_icon_#{index + 1}.png", :alt => "Propossal topic icon")%>
+          </div>
+          
+          <div id="proposals_buttons">
+            <ul>
+              <li><%= link_to "Yes", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "0" %></li>
+              <li><%= link_to "No", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "1" %></li>
+              <li><%= link_to "Abstention", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "2" %></li>
+            </ul>
+          </div>
+          <br/>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+  
+  <div id="confirmation">
+    <ul>
+      <% @proposals.each_with_index do |proposal, index| %>
+      <li class="confirmation" id="confirmation_proposal_<%= index + 1 %>">
+        <h3>
+        <span class="number"><%= index + 1 %></span>
+        <span class="title"><%= proposal.name %></span>
+        <%= hidden_field_tag 'proposal_id', proposal.id, :class => "hidden_proposal_id" %>
+        <%= hidden_field_tag 'proposal_vote', '-1', :class => "hidden_proposal_vote" %>
+        <%= hidden_field_tag 'proposal_public_key', proposal.public_key, :class => "hidden_public_key" %>
+        
+        </h3>
+        <span class="choice"></span>
+        <span class="change"><%= link_to "<< change", "#", :class => "change_vote", :name => "#{index + 1}"  %></span>
+      </li>
+      <% end %>
+    </ul>
+    
+    <div id="send_button">
+      <%= link_to "Send vote", retrieve_dni_path %>
     </div>
- 
-    <div id="confirmation">
-        <ul>
-            <% @proposals.each_with_index do |proposal, index| %>
-            <li class="confirmation" id="confirmation_proposal_<%= index + 1 %>">
-                <h3>
-                <span class="number"><%= index + 1 %></span>
-                <span class="title"><%= proposal.name %></span>
-                <%= hidden_field_tag 'proposal_id', proposal.id, :class => "hidden_proposal_id" %>
-                <%= hidden_field_tag 'proposal_vote', '-1', :class => "hidden_proposal_vote" %>
-                <%= hidden_field_tag 'proposal_public_key', proposal.public_key, :class => "hidden_public_key" %>
-
-                </h3>
-                <span class="choice"></span>
-                <span class="change"><%= link_to "<< change", "#", :class => "change_vote", :name => "#{index + 1}"  %></span>
-            </li>
-            <% end %>
-        </ul>
-
-        <div id="send_button">
-        <%= link_to "Send vote", retrieve_dni_path %>
-        </div>
-    </div>
+  </div>
 
 </div>
-
 
 <%= render "javascript" %>
 
 <div id='wait_section'>
-    <div>Sending your vote<br /><small>Please wait..</small></div>
+  <div>Sending your vote<br /><small>Please wait..</small></div>
 </div>
 
 <div id="success_section">
-    <h2>Your vote was successfully casted</h2><h3>Thanks for participating</h3>
-    <small>You can remove your DNIe from the card reader</small>
+  <h2>Your vote was successfully casted</h2><h3>Thanks for participating</h3>
+  <small>You can remove your DNIe from the card reader</small>
 </div>
 
 
 <div id="error_section">
-    <h2>Title</h2><p>Description</p>
+  <h2>Title</h2><p>Description</p>
 </div>
 
 <div id="info_section">
-    <h2>Title</h2><p>Description</p>
+  <h2>Title</h2><p>Description</p>
 </div>
-
 
 <div id="applet_info">
 ...
