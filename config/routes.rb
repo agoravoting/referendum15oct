@@ -12,5 +12,5 @@ Referendum15oct::Application.routes.draw do
   match '/confirmation'  => 'pages#confirmation', :as => 'confirmation'
   match '/process_ballots' => 'proposals#process_ballots'
 
-  root :to => "pages#insert_dni"
+  root :to => "proposals#index"
 end
