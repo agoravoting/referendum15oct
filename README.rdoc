@@ -9,7 +9,7 @@ Application to vote with your electronic ID in the Referedum of October 15th.
 
 == Prerequisites
   Active DNIe and configured DNIe card reader 
-  http://www.dnielectronico.es/como_utilizar_el_dnie/verificar.html
+  www.opensc-project.org/downloads/nightly/opendnie/
   
 == Install and Use:
 
