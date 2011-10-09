@@ -67,35 +67,15 @@
 
 </div>
 
-<%= render "javascript" %>
+<%= render 'javascript' %>
 
-<div id='wait_section'>
-  <div>Sending your vote<br /><small>Please wait..</small></div>
-</div>
+<%= render 'wait_section' %>
 
-<div id="success_section">
-  <h2>Your vote was successfully casted</h2><h3>Thanks for participating</h3>
-  <small>You can remove your DNIe from the card reader</small>
-</div>
+<%= render 'success_section' %>
 
+<%= render 'error_section' %>
 
-<div id="error_section">
-  <h2>Title</h2><p>Description</p>
-</div>
+<%= render 'info_section' %>
 
-<div id="info_section">
-  <h2>Title</h2><p>Description</p>
-</div>
-
-<div id="applet_info">
-...
-</div>
-
-<div id="applet_log">
-...
-</div>
-
-<div id="java_applet_wrapper">
-    <applet id="java_applet" code="org.agora.VotingApplet.class" archive="lib/apache-commons-codec-1.4.jar, lib/bcprov-1.45.jar, lib/verificatum.jar, lib/agora-applet.jar" width="0" height="0">applet yeah</applet>
-</div>
+<%= render 'applet' %>
 
