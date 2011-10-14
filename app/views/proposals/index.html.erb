@@ -1,7 +1,7 @@
 <div id="insert_card_section">
   <div id="insert_card_section_wrapper">
-      <h2>Insert your DNIe<br /> for voting</h2>
-      <p>Loading, please wait...</p>
+      <h2>Inserte su DNIe<br /> para votar</h2>
+      <p>Cargando, por favor espere...</p>
   </div>
   <div id="insert_dnie_icon">
       <%= image_tag("dni_icon_insertar.png", :alt => "Icon of a DNIe being introduced into the card reader") %>
@@ -10,7 +10,7 @@
 
 <div id="choose_section">
   <div id="instructions">
-    <h2>Proposal 1 of <%= @proposals.length %></h2>
+    <h2>Propuesta 1 de <%= @proposals.length %></h2>
   </div>
   
   <div id="proposals_items">
@@ -31,9 +31,9 @@
           
           <div id="proposals_buttons">
             <ul>
-              <li><%= link_to "Yes", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "0" %></li>
+              <li><%= link_to "Sí", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "0" %></li>
               <li><%= link_to "No", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "1" %></li>
-              <li><%= link_to "Abstention", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "2" %></li>
+              <li><%= link_to "Abstención", "#", :class => "vote", :name => "proposal_#{index + 1}", :value => "2" %></li>
             </ul>
           </div>
           <br/>
@@ -61,7 +61,7 @@
     </ul>
     
     <div id="send_button">
-      <%= link_to "Send vote", retrieve_dni_path %>
+      <%= link_to "Enviar voto", retrieve_dni_path %>
     </div>
   </div>
 

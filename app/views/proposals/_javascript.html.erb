@@ -13,7 +13,7 @@
     pushUpdateEvent("DEBUG_INFO", "inside here", "");
     // This are some checks that are done at startup
     if (!(/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent))) {
-        pushErrorEvent("NOT_USING_FIREFOX", "ERROR", "Unfortunately, only Mozilla Firefox is currently supported");
+        pushErrorEvent("NOT_USING_FIREFOX", "ERROR", "Desafortunadamente, solo Mozilla Firefox está actualmente soportado");
     } else if (!navigator.javaEnabled()) {
         pushErrorEvent("JAVA_DISABLED", "ERROR", "");
     } else {
@@ -25,7 +25,7 @@
       $("#proposal_<%= i + 1 %> .vote").click(function () {
         $("#proposal_<%= i + 1 %>").fadeOut("fast", function() {
           if (<%= i + 1 %> != <%= @proposals.length %>) {
-            $('#instructions h2').html("Proposal <%= i + 2 %> of <%= @proposals.length %>");
+            $('#instructions h2').html("Propuesta <%= i + 2 %> de <%= @proposals.length %>");
           }
           $("#proposal_<%= i + 2 %>").fadeIn("fast");
         });
@@ -35,7 +35,7 @@
     // Connect the buttons of the last proposal to show the confirmation screen
     $("#proposal_<%= @proposals.length  %> .vote").click(function () {
       $("#proposal_<%= @proposals.length  %>").fadeOut("fast", function() {
-        $('#instructions h2').html("Confirmation");
+        $('#instructions h2').html("Confirmación");
         $("#proposals_items").hide();
         $("#confirmation").fadeIn("fast");
       });
@@ -58,7 +58,7 @@
                         $("#proposal_" + i).hide();
                     }
                 }
-                $('#instructions h2').html("Proposal <%= index + 1 %> of <%= @proposals.length %>");
+                $('#instructions h2').html("Propuesta <%= index + 1 %> de <%= @proposals.length %>");
 
                 // Make the shown proposal button go back to confirmation,
                 $("#proposal_<%= index + 1 %> .vote").unbind("click").click(function () {
@@ -70,7 +70,7 @@
                     $("#confirmation_" + proposal + " .choice").html(user_text);
                     $("#confirmation_" + proposal + " .hidden_proposal_vote").val(vote);
 
-                    $('#instructions h2').html("Confirmation");
+                    $('#instructions h2').html("Confirmación");
 
                     // Show confirmation
                     $("#proposal_<%= index + 1 %>").fadeOut("fast", function() {
@@ -283,8 +283,8 @@
                     'state_id': "UNRECOVERABLE_ERROR",
                     'section_id': "ERROR",
                     'section_data': {
-                        'title': "Unsupported web browser",
-                        'description': "You are using a web Browser that is not supported. Unfortunately, currently only Mozilla Firefox is supported. If you have it installed already in your computer, try to load the web page on it, or install Firefox if you don't have it installed yet. Click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Install#Not using Firefox\">here for instructions on how to install Mozilla Firefox</a>."
+                        'title': "Navegador no soportado",
+                        'description': "Está usando un navegador web que no está soportado. Desafortunadamente, solo Mozilla Firefox está supportado. Si lo tiene instalado pruebe a cargar la página ahí, o instale Firefox, si no lo tiene ya instalado. Haga click <a href=\"http://wiki.agoraciudadana.org/index.php?title=Support/Install#Not using Firefox\">aquí para ver instructions de como instalar Mozilla Firefox</a>."
                     }
                 }
             },
@@ -614,8 +614,8 @@
                     'state_id': "PROCESSING_VOTE",
                     'section_id': "WAIT",
                     'section_data': {
-                        'title': "Vote being processed",
-                        'description': "Loading the DNIe certificate.."
+                        'title': "Su voto está siendo procesado",
+                        'description': "Cargando certificado del DNIe.."
                     }
                 }
             },
@@ -626,8 +626,8 @@
                     'state_id': "PROCESSING_VOTE",
                     'section_id': "WAIT",
                     'section_data': {
-                        'title': "Vote being processed",
-                        'description': "Creating and signing the ballots.."
+                        'title': "Su voto está siendo procesado",
+                        'description': "Creando y firmando sus votos cifrados.."
                     }
                 }
             },
@@ -638,8 +638,8 @@
                     'state_id': "PROCESSING_VOTE",
                     'section_id': "WAIT",
                     'section_data': {
-                        'title': "Vote being processed",
-                        'description': "Sending the ballots to the server.."
+                        'title': "Su voto está siendo procesado",
+                        'description': "Enviando sus votos al servidor.."
                     }
                 }
             },
@@ -661,8 +661,8 @@
                     'state_id': "UNRECOVERABLE_ERROR",
                     'section_id': "ERROR",
                     'section_data': {
-                        'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) after you cancelled to send your vote. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
+                        'title': "Applet de Java colgado",
+                        'description': "El applet de Java usado en esta página se ha colgado(or lo ha parado) despues de que cancelara el envio de su voto. Por favor <a href=\"contacto@referendum15deoctubre.org\" class= \"report_problem\">envienos una incidencia haciendo click aquí</a>. Puede volver a cargar la página para probar otra vez."
                     }
                 }
             },
@@ -673,8 +673,8 @@
                     'state_id': "UNRECOVERABLE_ERROR",
                     'section_id': "ERROR",
                     'section_data': {
-                        'title': "Unknown error",
-                        'description': "An unknown error occurred after you cancelled to send your vote. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to restart the voting process."
+                        'title': "Error desconocido",
+                        'description': "Ha ocurrido un error desconocido despues de que cancelara el envio de su voto. Por favor <a href=\"contacto@referendum15deoctubre.org\" class= \"report_problem\">envienos una incidencia haciendo click aquí</a>. Puede volver a cargar la página para probar otra vez."
                     }
                 }
             },
@@ -685,8 +685,8 @@
                     'state_id': "UNRECOVERABLE_ERROR",
                     'section_id': "ERROR",
                     'section_data': {
-                        'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
+                        'title': "Applet Java colgado",
+                        'description': "El applet de Java usado en esta página se ha colgado (or lo ha parado) después de un error irrecuperable en su voto (su voto <strong>NO ha sido creado</strong>). Por favor <a href=\"contacto@referendum15deoctubre.org\" class= \"report_problem\">envienos una incidencia haciendo click aquí</a>. Puede volver a cargar la página para probar otra vez."
                     }
                 }
             },
@@ -697,8 +697,8 @@
                     'state_id': "UNRECOVERABLE_ERROR",
                     'section_id': "ERROR",
                     'section_data': {
-                        'title': "Unknown error",
-                        'description': "An unknown error occurred  after an unrecoverable voting error (so your vote was <strong>NOT casted</strong>). Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to restart the voting process."
+                        'title': "Error desconocido",
+                        'description': "Ha ocurrido un error desconocido después de un error irrecuperable en su voto (su voto <strong>NO ha sido creado</strong>). Por favor <a href=\"contacto@referendum15deoctubre.org\" class= \"report_problem\">envienos una incidencia haciendo click aquí</a>. Puede volver a cargar la página para probar otra vez."
                     }
                 }
             },
@@ -709,8 +709,8 @@
                     'state_id': "UNRECOVERABLE_ERROR",
                     'section_id': "ERROR",
                     'section_data': {
-                        'title': "Java applet crashed",
-                        'description': "The Java applet used in this page crashed (or you killed it) after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to try again."
+                        'title': "Applet Java colgado",
+                        'description': "El applet de Java usado en esta página se ha colgado (or lo ha parado) después de que su voto fuera correctamente creado, no se preocupe, hemos <strong>Guardado su voto correctamente</strong>. Por favor <a href=\"contacto@referendum15deoctubre.org\" class= \"report_problem\">envienos una incidencia haciendo click aquí</a>. Puede volver a cargar la página para probar otra vez."
                     }
                 }
             },
@@ -721,8 +721,8 @@
                     'state_id': "UNRECOVERABLE_ERROR",
                     'section_id': "ERROR",
                     'section_data': {
-                        'title': "Unknown error",
-                        'description': "An unknown error occurred after your vote correctly was casted, so don't worry, we <strong>DID cast successfully your vote</strong>. Please <a href=\"#\" class= \"report_problem\">report us the problem by clicking here</a>. You can reload the web page to vote again."
+                        'title': "Error desconocido",
+                        'description': "Ha ocurrido un error desconocido después  de que su voto fuera correctamente creado, no se preocupe, hemos <strong>Guardado su voto correctamente</strong>. Por favor <a href=\"contacto@referendum15deoctubre.org\" class= \"report_problem\">envienos una incidencia haciendo click aquí</a>. Puede volver a cargar la página para probar otra vez."
                     }
                 }
             },
@@ -887,9 +887,9 @@
                 if (finalTransition.next_state.section_id == "INSERT_CARD") {
                     clearVotingData();
                     if (finalTransition.next_state.section_data.card_reader_connected) {
-                        $('#insert_card_section p').html("Card reader connected, insert your DNIe");
+                        $('#insert_card_section p').html("Lector de tarjeta conectado, inserte su DNIe");
                     } else {
-                        $('#insert_card_section p').html("DNIe card reader not connected");
+                        $('#insert_card_section p').html("Lector de DNIe no conectado");
                     }
                 } else if (finalTransition.next_state.section_id == "ERROR") {
                     clearVotingData();
