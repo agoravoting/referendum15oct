@@ -22,11 +22,10 @@ combined_public_key = "00000000020000000002010000001a766572696669636174756d2e617
 
                                   <p>Esto incluiría:
                                     <ul>
-                                      <li>Ley de acceso a la información del sector público.</li>
-                                      <li>Contratación de altos cargos a través de concurso de méritos.</li>
-                                      <li>Endurecimiento del régimen de incompatibilidades de los cargos electos.</li>
-                                      <li>Prolongar la prescripción de los delitos de corrupción.</li>
-                                      <li>Regulación estricta de la financiación de los partidos políticos.</li>
+                                      <li>Redefinición de las circunscripciones electorales y de la fórmula de asignación de escaños.</li>
+                                      <li>Permitir concurrir a las elecciones a todos los partidos en igualdad de condiciones.</li>
+                                      <li>Adoptar un sistema de listas desbloqueadas.</li>
+                                      <li>Revisión del papel del Senado.</li>
                                     </ul>
                                   </p>',
                                    :public_key => combined_public_key,
@@ -35,13 +34,15 @@ combined_public_key = "00000000020000000002010000001a766572696669636174756d2e617
 },
                                   
                                  { :name        => 'Transparencia, mecanismos de control y lucha contra la corrupción',
-                                   :description => '<h3>¿Considera necesario que se garantice la separación de poderes y en especial la independencia del poder judicial?</h3>
+                                   :description => '<h3>¿Considera necesario que se asegure la transparencia política para erradicar la corrupción?</h3>
 
                                    <p>Esto incluiría:
                                      <ul>
-                                       <li>Despolitización del Tribunal Constitucional y el Tribunal de Cuentas.</li>
-                                       <li>Selección de los miembros del Consejo General del Poder Judicial por elección democrática según sus méritos.</li>
-                                       <li>Estudio de fórmulas encaminadas a separar poder ejecutivo del legislativo.</li>
+                                       <li>Ley de acceso a la información del sector público.</li>
+                                       <li>Contratación de altos cargos a través de concurso de méritos.</li>
+                                       <li>Endurecimiento del régimen de incompatibilidades de los cargos electos.</li>
+                                       <li>Prolongar la prescripción de los delitos de corrupción.</li>
+                                       <li>Regulación estricta de la financiación de los partidos políticos.</li>
                                       </ul>
                                     </p>',
                                    :public_key => combined_public_key,
