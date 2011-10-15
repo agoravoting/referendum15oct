@@ -42,7 +42,11 @@ module Verificatum
     }
 
     if not error
-      result = %x[../applet-verificatum/votecheck.sh #{args.join(' ')}]
+      if Rails.env == "production"
+        result = %x[../../applet-verificatum/votecheck.sh #{args.join(' ')}]
+      else
+        result = %x[../applet-verificatum/votecheck.sh #{args.join(' ')}]
+      end
     end
 
     if result != 'FAIL'
