@@ -1,6 +1,6 @@
 = Referendum 15 de octubre
  
-* http://referendum15oct.heroku.com
+* http://vota.referendum15deoctubre.org
 * https://agora.wadobo.com
  
 == Description:
@@ -38,7 +38,7 @@ Application to vote with your electronic ID in the Referedum of October 15th.
 
 == Gotchas
 
-  If you run into a java class not found error, try running the app with {pow}[http://pow.cx/].
+  If you run into a java class not found error, try running the app with {pow}[http://pow.cx/] or {passenger}[http://www.modrails.com/].
 
 == Contribute:
 
