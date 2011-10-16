@@ -28,6 +28,9 @@ GEM
       activemodel (= 3.0.9)
       activesupport (= 3.0.9)
     activesupport (3.0.9)
+    airbrake (3.0.4)
+      activesupport
+      builder
     arel (2.0.10)
     builder (2.1.2)
     capybara (0.4.1.2)
@@ -128,6 +131,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  airbrake
   capybara
   inherited_resources
   nokogiri

@@ -8,6 +8,7 @@ gem 'rake', '0.8.7'
 
 gem 'sqlite3'
 gem 'inherited_resources'
+gem 'airbrake'
 
 # Deploy with Capistrano
 # gem 'capistrano'
