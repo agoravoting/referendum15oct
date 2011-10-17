@@ -5,8 +5,8 @@ Referendum15oct::Application.routes.draw do
 
   resources :votes
 
-  match '/privacidad'      => 'pages#install',      :as => 'install'
-  match '/install'         => 'pages#privacy',      :as => 'privacy'
+  match '/privacidad'      => 'pages#privacy',      :as => 'privacy'
+  match '/install'         => 'pages#install',      :as => 'install'
   match '/retrieve_dni'    => 'pages#retrieve_dni', :as => 'retrieve_dni'
   match '/confirmation'    => 'pages#confirmation', :as => 'confirmation'
   match '/process_ballots' => 'proposals#process_ballots'
