@@ -33,3 +33,7 @@ group :development, :test do
   gem 'capybara'
   gem 'rspec-rails'
 end
+
+group :production do
+  gem 'mysql2', '0.2.6'
+end
