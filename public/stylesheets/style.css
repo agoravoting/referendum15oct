@@ -583,3 +583,17 @@ applet {
     height: 250px;
     overflow:scroll;
 }
+
+#logo a {
+		text-decoration: none;
+		color: white;
+}
+
+.instructions a {
+		font-size: 14px;
+		font-weight: bold;
+}
+
+.float_right {
+		float:right;
+}

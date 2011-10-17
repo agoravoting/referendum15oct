@@ -1,0 +1,25 @@
+<h2>Instrucciones de Instalación:</h2>
+<br/>
+<ol>
+  <li>
+    <p>Actualizar a la version 7 o superior de <%= link_to "Firefox", "http://www.mozilla.org/es-ES/firefox/new/", :target => "_blank" %></p>
+    <br/>
+  </li>
+  <li>
+    <p>Instalar el driver de open-dni para nuesto sistema operativo</p>
+    <%= link_to "Windows", "http://www.opensc-project.org/downloads/nightly/opendnie/OpenSC-DNIe-x86-r412.307.msi" %><br/>
+    <%= link_to "Linux", "http://www.opensc-project.org/downloads/nightly/opendnie/OpenSC-DNIe-src-r412.tar.gz" %><br/>
+    <%= link_to "Mac", "http://www.opensc-project.org/downloads/nightly/opendnie/OpenSC-DNIe-10.6-r412.48.dmg" %><br/><br/>
+  </li>
+  <li>
+    <p>Instalar los certificados de la dirección general de la policia en Firefox</p>
+    <%= link_to "sha1", "/ACRAIZ-SHA1.crt" %><br/>
+    <%= link_to "sha2", "/ACRAIZ-SHA2.crt" %><br/>
+  </li>
+</ol>
+<br/>
+<p><%= link_to "¡Probemos!", "/" %></p>
+<br/>
+<p>¿Sigues teniendo problemas?</p>
+<br/>
+<%= mail_to "vota@referendum15deoctubre.org" %>

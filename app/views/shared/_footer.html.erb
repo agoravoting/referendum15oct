@@ -1,6 +1,9 @@
 <footer>
   <ul>
-    <li><%=link_to "Terminos de uso", privacy_path, :target => "_blank"  %></li>
-    <li><%=link_to "Transparencia y Seguridad del sistema de votación", "http://referendum15deoctubre.org/noticia4.php", :target => "_blank" %></li>
+    <% unless current_page? install_path %>
+      <li class="instructions"><%=link_to "Instrucciones de instalación", install_path  %></li>
+    <% end %>
+    <li class="float_right"><%=link_to "Transparencia y Seguridad del sistema de votación", "http://referendum15deoctubre.org/noticia4.php", :target => "_blank" %></li>
+    <li class="float_right"><%=link_to "Terminos de uso", privacy_path, :target => "_blank"  %></li>
   </ul>
 </footer>
